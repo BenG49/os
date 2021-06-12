@@ -1,3 +1,4 @@
+# https://stackoverflow.com/questions/65099895/extended-inline-assembly-in-c-what-exactly-are-the-clobbered-registers
 unsigned char port_byte_in(unsigned short port)
 {
     unsigned char out;
