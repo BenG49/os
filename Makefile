@@ -43,8 +43,8 @@ debug: $(OUT_IMG) kernel.elf
 	qemu-system-i386 -machine q35 -S -gdb tcp::1234 -fda $(OUT_IMG) &
 
 gdb:
-	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf" -ex "set disassembly-flavor intel" -ex "set architecture i8086" -ex "layout regs" -ex "layout asm"
+	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf" -ex "set disassembly-flavor intel" -ex "set architecture i8086" -ex "layout asm" -ex "layout regs"
 
 clean:
-	rm $(OBJ) boot/*.bin
-	rm *.bin *.elf $(OUT_IMG)
+	rm $(OBJ) kernel/kernel_entry.o boot/*.bin
+	rm *.bin $(OUT_IMG) *.elf
