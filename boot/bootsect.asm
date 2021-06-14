@@ -9,6 +9,11 @@
     call print
     call newline
 
+    ; set video mode to 80x25
+    mov ah, 0
+    mov al, 3
+    int 0x10
+
     call kernel
     call loadpm
 
@@ -55,6 +60,7 @@ initpm:
     mov esp, ebp
 
     sti                 ; set interrupt flag
+
     call KERNEL_ADDR    ; jump to kernel
 
 MSG_REAL_MODE db "Booted in 16 bit real mode", 0

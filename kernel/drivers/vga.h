@@ -1,9 +1,12 @@
 #ifndef VGA_H
 #define VGA_H
 
-#define VMEM_ADDR 0xb8000
+#define VIDEO_ADDR 0xb8000
 #define ROWS 25
 #define COLS 80
+#define SCREEN_SIZE 2000
+
+#define COLOR 0x03
 
 #include "../util.h"
 
@@ -27,13 +30,8 @@ enum VGA_COLORS
     WHITE
 };
 
-u8 make_color(u8 text, u8 background);
-
-u16 get_cursor_pos();
-void set_cursor_pos(u8 x, u8 y);
-
-void clear_screen();
-void print(char *msg, u8 color);
-void print_at(char *msg, u8 x, u8 y, u8 color);
+void clear();
+void print(char *msg);
+void scroll();
 
 #endif // VGA_H

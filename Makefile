@@ -13,6 +13,8 @@ CC=/usr/local/i386elfgcc/bin/i386-elf-gcc
 GDB=/usr/bin/gdb
 LD=/usr/local/i386elfgcc/bin/i386-elf-ld
 
+CFLAGS=-Wint-conversion
+
 OUT_IMG=os-img.bin
 
 $(OUT_IMG): boot/bootsect.bin kernel.bin
