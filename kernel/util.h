@@ -16,6 +16,5 @@ typedef long i64;
 #define false (!true)
 
 void _memcpy(u16 *src, u16 *dest, int bytes);
-void itoa(int val, char str[]);
 
 #endif // UTIL_H
