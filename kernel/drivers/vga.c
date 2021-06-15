@@ -32,7 +32,7 @@ void scroll()
         row += COLS;
     }
 
-    row = (u16*)(VIDEO_ADDR + COLS * (ROWS - 1));
+    row = (u16*)(VIDEO_ADDR + (SCREEN_SIZE - COLS) * 2);
 
     for (int i = 0; i < COLS; ++i)
     {
@@ -42,19 +42,13 @@ void scroll()
 
 static int print_char(char c, int color, int offset)
 {
-    // u8 *addr = (u8*)(VIDEO_ADDR + offset * 2);
-    // addr[0] = c;
-    // addr[1] = color;
-    // set_cursor_offset(++offset);
-    // return offset;
-
-    /*if (c == 0x8 && offset > 0) // backspace
+    if (c == 0x8 && offset > 0) // backspace
         --offset;
     else if (c == '\t') // 4 spaces (best tab spacing)
         offset = (offset + 4) & 0b11111100;
     else if (c == '\r') // carrige return
         offset = offset % COLS;
-    else*/ if (c == '\n') // newline
+    else if (c == '\n') // newline
         offset += COLS - (offset % COLS);
     else if (c >= ' ')  // printable character
     {
@@ -84,7 +78,6 @@ void clear()
 
     for (u16 i = 0; i < SCREEN_SIZE; ++i)
         data[i] = BLANK;
-        // data[i] = ((color & 0xf) << 12) | 0xf00 | ' ';
 
     set_cursor_offset(0);
 }

@@ -42,6 +42,9 @@ kernel.elf: kernel/kernel_entry.o ${OBJ}
 %.bin: %.asm
 	nasm -f bin $< -o $@
 
+%.s: %.c
+	$(CC) -S -fno-pie -fno-stack-protector -fno-asynchronous-unwind-tables -fno-dwarf2-cfi-asm -masm=intel -m32 -ffreestanding -c $< -o $@
+
 run: $(OUT_IMG)
 	qemu-system-i386 -machine q35 -fda $<
 
