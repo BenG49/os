@@ -1,4 +1,4 @@
 [bits 32]
-[extern main]   ; external C function
-call main       ; call c function
+[extern kernel_main]   ; external C function
+call kernel_main       ; call c function
 jmp $

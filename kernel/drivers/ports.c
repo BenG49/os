@@ -1,8 +1,8 @@
 #include "ports.h"
 
-u8 inb(u16 port)
+uint8_t inb(uint16_t port)
 {
-    u8 out;
+    uint8_t out;
 
     __asm__("inb %1, %0"
            :"=a"(out)
@@ -10,16 +10,16 @@ u8 inb(u16 port)
     return out;
 }
 
-void outb(u16 port, u8 data)
+void outb(uint16_t port, uint8_t data)
 {
     __asm__("outb %1, %0"
          ::"dN"(port)
            ,"a"(data));
 }
 
-u16 inw(u16 port)
+uint16_t inw(uint16_t port)
 {
-    u16 out;
+    uint16_t out;
 
     __asm__("inw %1, %0"
            :"=a"(out)
@@ -27,7 +27,7 @@ u16 inw(u16 port)
     return out;
 }
 
-void outw(u16 port, u16 data)
+void outw(uint16_t port, uint16_t data)
 {
     __asm__("outw %1, %0"
           ::"dN"(port)

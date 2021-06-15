@@ -30,6 +30,7 @@ enum VGA_COLORS
     WHITE
 };
 
+int make_color(int text, int back);
 void clear();
 void set_cursor_pos(int x, int y);
 void print(const char *msg, int color);

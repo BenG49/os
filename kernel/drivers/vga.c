@@ -15,16 +15,16 @@ static int get_cursor_offset()
 static void set_cursor_offset(int offset)
 {
     outb(VGA_INDEX, CURSOR_LOW);
-    outb(VGA_DATA, (u8)(offset & 0xff));
+    outb(VGA_DATA, (uint8_t)(offset & 0xff));
     outb(VGA_INDEX, CURSOR_HIGH);
-    outb(VGA_DATA, (u8)((offset >> 8) & 0xff));
+    outb(VGA_DATA, (uint8_t)((offset >> 8) & 0xff));
 }
 
 void set_cursor_pos(int x, int y) { set_cursor_offset(y * COLS + x); }
 
 void scroll()
 {
-    u16 *row = (u16*)(VIDEO_ADDR + COLS);
+    uint16_t *row = (uint16_t*)(VIDEO_ADDR + COLS);
 
     for (int i = 0; i < ROWS; ++i)
     {
@@ -32,7 +32,7 @@ void scroll()
         row += COLS;
     }
 
-    row = (u16*)(VIDEO_ADDR + (SCREEN_SIZE - COLS) * 2);
+    row = (uint16_t*)(VIDEO_ADDR + (SCREEN_SIZE - COLS) * 2);
 
     for (int i = 0; i < COLS; ++i)
     {
@@ -58,7 +58,7 @@ static int print_char(char c, int color, int offset)
             offset -= COLS;
         }
 
-        u8 *addr = (u8*)(VIDEO_ADDR + offset * 2);
+        uint8_t *addr = (uint8_t*)(VIDEO_ADDR + offset * 2);
         addr[0] = c;
         addr[1] = color;
         ++offset;
@@ -74,9 +74,9 @@ static int print_char(char c, int color, int offset)
 
 void clear()
 {
-    u16 *data = (u16*)VIDEO_ADDR;
+    uint16_t *data = (uint16_t*)VIDEO_ADDR;
 
-    for (u16 i = 0; i < SCREEN_SIZE; ++i)
+    for (uint16_t i = 0; i < SCREEN_SIZE; ++i)
         data[i] = BLANK;
 
     set_cursor_offset(0);
@@ -88,4 +88,9 @@ void print(const char *str, int color)
 
     while (*str != 0)
         px_offset = print_char(*str++, color, px_offset);
+}
+
+int make_color(int text, int back)
+{
+    return (int)((back << 4) | text);
 }
