@@ -1,6 +1,5 @@
 #include "ports.h"
 
-// https://stackoverflow.com/questions/65099895/extended-inline-assembly-in-c-what-exactly-are-the-clobbered-registers
 u8 inb(u16 port)
 {
     u8 out;

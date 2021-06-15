@@ -6,7 +6,7 @@
 #define COLS 80
 #define SCREEN_SIZE 2000
 
-#define COLOR 0x03
+#define BLANK 0x0f20
 
 #include "../util.h"
 
@@ -31,7 +31,8 @@ enum VGA_COLORS
 };
 
 void clear();
-void print(char *msg);
+void set_cursor_pos(int x, int y);
+void print(const char *msg, int color);
 void scroll();
 
 #endif // VGA_H
