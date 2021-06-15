@@ -8,35 +8,42 @@ LD=$()
 # replace .c with .o
 OBJ=${C_SOURCES:.c=.o}
 
-CC=/usr/local/i386elfgcc/bin/i386-elf-gcc
+# CC=/usr/local/i386elfgcc/bin/i386-elf-gcc
+CC=/usr/bin/gcc
 # GDB=/usr/local/i386elfgcc/bin/i386-elf-gdb
 GDB=/usr/bin/gdb
-LD=/usr/local/i386elfgcc/bin/i386-elf-ld
-
-CFLAGS=-Wint-conversion
+# LD=/usr/local/i386elfgcc/bin/i386-elf-ld
+LD=/usr/bin/ld
 
 OUT_IMG=os-img.bin
+
+.PHONY: run debug gdb clean
 
 $(OUT_IMG): boot/bootsect.bin kernel.bin
 	cat $^ > $@
 
 # KERNEL
 kernel.bin: kernel/kernel_entry.o ${OBJ}
-	$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary
+	$(LD) -m elf_i386 -o $@ -T link.ld $^
+#$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # Used for debug
 kernel.elf: kernel/kernel_entry.o ${OBJ}
-	$(LD) -o $@ -Ttext 0x1000 $^
+	$(LD) -m elf_i386 -o $@ -Ttext 0x1000 $^
 
 # Generic rules
 %.o: %.c ${HEADERS}
-	$(CC) -g $(CFLAGS) -ffreestanding -c $< -o $@
+	$(CC) -g -fno-pie -fno-stack-protector -m32 -ffreestanding -c $< -o $@
+#$(CC) -g $(CFLAGS) -ffreestanding -c $< -o $@
 
 %.o: %.asm
 	nasm -f elf $< -o $@
 
 %.bin: %.asm
 	nasm -f bin $< -o $@
+
+%.s: %.c
+	$(CC) -S -fno-pie -fno-stack-protector -fno-asynchronous-unwind-tables -fno-dwarf2-cfi-asm -masm=intel -m32 -ffreestanding -c $< -o $@
 
 run: $(OUT_IMG)
 	qemu-system-i386 -machine q35 -fda $<
@@ -49,4 +56,4 @@ gdb:
 
 clean:
 	rm $(OBJ) kernel/kernel_entry.o boot/*.bin
-	rm *.bin $(OUT_IMG) *.elf
+	rm *.bin *.elf
