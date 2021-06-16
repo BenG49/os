@@ -1,6 +1,8 @@
 #ifndef PORTS_H
 #define PORTS_H
 
+#include <stdint.h>
+
 #define VGA_INDEX   0x3d4
 #define VGA_DATA    0x3d5
 
@@ -16,8 +18,6 @@
 #define PIC2_CMD    PIC2
 #define PIC2_DATA  (PIC2+1)
 #define PIC_EOI     0x20
-
-#include "../util.h"
 
 uint8_t inb(uint16_t port);
 void outb(uint16_t port, uint8_t data);

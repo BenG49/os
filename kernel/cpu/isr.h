@@ -1,7 +1,8 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "../util.h"
+#include <stdint.h>
+#include "ports.h"
 
 #define INTERRUPT_COUNT 0x100
 

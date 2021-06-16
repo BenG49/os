@@ -1,5 +1,4 @@
 #include "idt.h"
-#include "../drivers/ports.h"
 
 idt_gate idt[INTERRUPT_COUNT];
 idt_register idt_reg;

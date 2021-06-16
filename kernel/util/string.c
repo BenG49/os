@@ -1,4 +1,4 @@
-#include "util.h"
+#include "string.h"
 
 char *reverse(char *str, int len)
 {
@@ -31,7 +31,7 @@ char *itoa(int n, char *str, int base)
     }
 
     int i = 0;
-    int sign = false;
+    bool sign = false;
 
     if (n < 0)
     {

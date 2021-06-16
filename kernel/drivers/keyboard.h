@@ -1,6 +1,9 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include "vga.h"
+#include "../cpu/isr.h"
+
 /**
  * thanks to https://github.com/RicardoLuis0/simple-ps2-keyboard-driver-osdev
  * this would have eaten years from my life
@@ -227,25 +230,15 @@ typedef enum {
     KEY_PRINTSCR_RELEASED,
 } keycode;
 
-typedef enum
-{
-    NONE,           // no state
-    FIRST,          // recieved first 0xe0, waiting for next scancode
-    PRINT_PRESS,    // recieved second scancode 0x2a
-    PRINT_RELEASE,  // recieved second scancode 0xb7
-    THIRD_PRESS,    // was PRINT_PRESS, recieved third scancode 0xe0
-    THIRD_RELEASE   // was PRINT_RELEASE, recieved third scancode 0xe0
-} extended_state;
-
-// extended/print scancodes
-#define EXTENDED_SCANCODE 0xe0
-#define PRINT_PRESS_1   0x2a
-#define PRINT_RELEASE_1 0xb7
-#define PRINT_PRESS_3   0x37
-#define PRINT_RELEASE_3 0xaa
+// printscr scancodes
+#define PRTSC_1_3 0xe0
+#define PRTSC_P2  0x2a
+#define PRTSC_R2  0xb7
+#define PRTSC_P4  0x37
+#define PRTSC_R4  0xaa
 
 // pause scancodes
-#define PAUSE_CODE_COUNT 6
+#define PAUSE_CODE_COUNT 5
 
 #define KB_PORT 0x60 
 

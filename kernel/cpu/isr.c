@@ -1,6 +1,4 @@
 #include "isr.h"
-#include "../drivers/ports.h"
-#include "../drivers/vga.h"
 
 handler handlers[INTERRUPT_COUNT];
 

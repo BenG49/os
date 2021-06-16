@@ -1,4 +1,3 @@
-#include "drivers/vga.h"
 #include "drivers/keyboard.h"
 #include "cpu/idt.h"
 #include "cpu/timer.h"
@@ -13,4 +12,6 @@ int kernel_main()
     newline();
 
     print("</kernel>\n", make_color(RED, BLACK));
+
+    return 0;
 }

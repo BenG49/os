@@ -1,6 +1,4 @@
 #include "vga.h"
-#include "ports.h"
-
 // returns offset in pixels
 static int get_cursor_offset()
 {
@@ -96,6 +94,12 @@ void print(char *str, int color)
 
     while (*str != 0)
         px_offset = print_char(*str++, color, px_offset);
+}
+
+void printi(int n, int base, int color)
+{
+    char buf[255];
+    print(itoa(n, buf, base), color);
 }
 
 int make_color(int text, int back)

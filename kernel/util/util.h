@@ -5,16 +5,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-char *itoa(int i, char *buffer, int base);
-char *reverse(char *buffer, int len);
-
-static void inline _memcpy(uint16_t *src, uint16_t *dest, int bytes)
+inline static void _memcpy(uint16_t *src, uint16_t *dest, int bytes)
 {
     for (int i = 0; i < bytes; ++i)
         dest[i] = src[i];
 }
 
-static void inline memset(void *addr, uint8_t val, size_t n)
+inline static void memset(void *addr, uint8_t val, size_t n)
 {
     uint8_t *a = addr;
 
@@ -22,7 +19,7 @@ static void inline memset(void *addr, uint8_t val, size_t n)
         *a++ = val;
 }
 
-static size_t inline strlen(const char *str)
+inline static size_t strlen(const char *str)
 {
     size_t i = 0;
 
@@ -34,17 +31,17 @@ static size_t inline strlen(const char *str)
     return i;
 }
 
-static bool inline bit_test(uint8_t flag, int bitpos)
+inline static bool bit_test(uint8_t flag, int bitpos)
 {
-    return (flag >> bitpos) & 1 == 1;
+    return ((flag >> bitpos) & 1) == 1;
 }
 
-static uint8_t inline set_bit(uint8_t flag, int bitpos)
+inline static uint8_t set_bit(uint8_t flag, int bitpos)
 {
     return flag | (1UL << bitpos);
 }
 
-static uint8_t inline clear_bit(uint8_t flag, int bitpos)
+inline static uint8_t clear_bit(uint8_t flag, int bitpos)
 {
     return flag & ~(1UL << bitpos);
 }

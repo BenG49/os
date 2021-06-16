@@ -1,7 +1,4 @@
 #include "keyboard.h"
-#include "ports.h"
-#include "../cpu/isr.h"
-#include "vga.h"
 
 /**
  * Ok this would have taken at least a week, thanks again to
@@ -477,79 +474,96 @@ static const keycode us_querty_keycodes_extra1[0xEE] = {
     KEY_INVALID,//0xED,MULTIMEDIA
 };
 
-// STARTS AT ' '
-const char shifted[] = " !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
+const char shifted[] = "???????????????????????????????? !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
 
+// for some reason the pause scancode is 5 bytes long, go figure
 const uint8_t PAUSE_CODES[] = {
-    0xe1, 0x1d, 0x45, 0xe1, 0x9d, 0xc5
+    0x1d, 0x45, 0xe1, 0x9d, 0xc5
 };
 
 uint8_t flags = 0;
-extended_state estate = NONE;
 uint8_t pause_state = 0;
+uint8_t prtsc_pstate = 0;
+uint8_t prtsc_rstate = 0;
 
 // complicated annoying state machine
 // returns -1 if waiting for next scancode
 static keycode get_keycode(uint8_t scancode)
 {
-    for (int i = 0; i < PAUSE_CODE_COUNT; ++i)
+    if (scancode == PAUSE_CODES[0] && pause_state == 0)
     {
-        if (scancode == PAUSE_CODES[i])
+        ++pause_state;
+        return -1;
+    }
+
+    if (pause_state != 0)
+    {
+        if (scancode == PAUSE_CODES[pause_state])
         {
-            if (pause_state == i - 1)
+            if (pause_state == PAUSE_CODE_COUNT - 1)
             {
-                if (i == PAUSE_CODE_COUNT - 1)
-                    return KEY_PAUSE;
-                else
-                {
-                    ++pause_state;
-                    return -1;
-                }
+                pause_state = 0;
+                return KEY_PAUSE;
             }
             else
-                pause_state = 0;
+            {
+                ++pause_state;
+                return -1;
+            }
+        } else
+            // if for some reason pause scancodes stop
+            pause_state = 0;
+    }
 
-            break;
+    /**
+     * NO GUARANTEE THAT THIS WILL WORK, WAS NOT ABLE TO TEST BECAUSE
+     * PRINTSCR DOESN'T PASS TO QEMU
+     */
+    if (scancode == PRTSC_1_3)
+    {
+        // 3rd scancode
+        if (prtsc_pstate != 0) ++prtsc_pstate;
+        else if (prtsc_rstate != 0) ++prtsc_rstate;
+        // 1st scancode
+        else
+        {
+            ++prtsc_pstate;
+            ++prtsc_rstate;
         }
-    }
 
-    // extended/print keys
-    if (scancode == EXTENDED_SCANCODE)
+        return -1;
+    }
+    else if (scancode == PRTSC_P2 && prtsc_pstate != 0)
     {
-        if (estate == NONE)
-        { estate = FIRST; return -1; }
-        else if (estate == PRINT_PRESS)
-        { estate = THIRD_PRESS; return -1; }
-        else if (estate == PRINT_RELEASE)
-        { estate = THIRD_RELEASE; return -1; }
-        else
+        // if second scancode, inc pressed and reset released
+        ++prtsc_pstate;
+        prtsc_rstate = 0;
+        return -1;
+    }
+    else if (scancode == PRTSC_R2 && prtsc_rstate != 0)
+    {
+        // if second scancode, inc released and reset pressed
+        ++prtsc_rstate;
+        prtsc_pstate = 0;
+        return -1;
+    }
+    else if (scancode == PRTSC_P4 && prtsc_pstate != 0)
+    {
+        prtsc_pstate = 0;
+        return KEY_PRINTSCR_PRESSED;
+    }
+    else if (scancode == PRTSC_R4 && prtsc_rstate != 0)
+    {
+        prtsc_rstate = 0;
+        return KEY_PRINTSCR_RELEASED;
+    }
+    else if (prtsc_pstate == 1 || prtsc_rstate == 1)
+    {
+        prtsc_pstate = 0;
+        prtsc_rstate = 0;
+
+        if (scancode < 0xee)
             return us_querty_keycodes_extra1[scancode];
-    }
-    else if (scancode == PRINT_PRESS_1)
-    {
-        if (estate == FIRST) { estate = PRINT_PRESS; return -1; }
-        else
-            estate = NONE;
-    }
-    else if (scancode == PRINT_RELEASE_1)
-    {
-        if (estate == FIRST) { estate = PRINT_RELEASE; return -1; }
-        else
-            estate = NONE;
-    }
-    else if (scancode == PRINT_PRESS_3)
-    {
-        if (estate == THIRD_PRESS)
-            return KEY_PRINTSCR_PRESSED;
-        else 
-            estate = NONE;
-    }
-    else if (scancode == PRINT_RELEASE_3)
-    {
-        if (estate == THIRD_RELEASE)
-            return KEY_PRINTSCR_RELEASED;
-        else 
-            estate = NONE;
     }
 
     // normal keys
@@ -583,10 +597,10 @@ static void keyboard_callback(stack_regs regs)
     {
         if (bit_test(flags, SHIFT) || bit_test(flags, CAPS))
         {
-            key = shifted[key - 0x20];
+            key = shifted[key];
         }
 
-        printc(key, WHITE_ON_BLACK);
+        printc(key, WOB);
     }
 }
 
