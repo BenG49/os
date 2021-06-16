@@ -1,20 +1,20 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-// from jdh tetris os
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long u64;
-
-typedef char i8;
-typedef short i16;
-typedef int i32;
-typedef long i64;
+#include <stdint.h>
+#include <stddef.h>
 
 #define true (1 == 1)
 #define false (!true)
 
-void _memcpy(u16 *src, u16 *dest, int bytes);
+void _memcpy(uint16_t *src, uint16_t *dest, int bytes);
+char *itoa(int i, char *buffer, int base);
+char *reverse(char *buffer, int len);
+size_t inline strlen(const char *str);
+
+#define asm __asm__ volatile
+
+#define cli() asm ("cli")
+#define sti() asm ("sti")
 
 #endif // UTIL_H

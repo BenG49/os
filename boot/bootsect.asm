@@ -27,7 +27,7 @@ kernel:
     call newline
 
     mov bx, 0x1000          ; buffer addr
-    mov dh, 4               ; 2 sectors
+    mov dh, 31              ; sector count
     mov dl, [BOOT_DRIVE]    ; load drive from memory
     call read_sectors
     ret

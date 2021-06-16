@@ -1,6 +1,6 @@
 # os
 
-Small kernel and bootloader, currently ring 0 protected mode.
+Small x86 kernel and bootloader, currently ring 0 protected mode.
 
 Resources:
  - https://github.com/cfenollosa/os-tutorial

@@ -2,6 +2,7 @@
     "files.associations": {
         "ports.h": "c",
         "vga.h": "c",
-        "util.h": "c"
+        "util.h": "c",
+        "idt.h": "c"
     }
 }
