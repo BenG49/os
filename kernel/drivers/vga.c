@@ -94,3 +94,10 @@ int make_color(int text, int back)
 {
     return (int)((back << 4) | text);
 }
+
+void newline()
+{
+    int px_offset = get_cursor_offset();
+    px_offset += COLS - (px_offset % COLS);
+    set_cursor_offset(px_offset);
+}

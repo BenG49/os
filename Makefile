@@ -2,11 +2,9 @@
 # $< = first dependency
 # $^ = all dependencies
 
-C_SOURCES=$(wildcard kernel/*.c kernel/drivers/*.c)
-HEADERS=$(wildcard kernel/*.h kernel/drivers/*.h)
-LD=$()
-# replace .c with .o
-OBJ=${C_SOURCES:.c=.o}
+C_SOURCES=$(wildcard kernel/*.c kernel/drivers/*.c kernel/cpu/*.c)
+HEADERS=$(wildcard kernel/*.h kernel/drivers/*.h kernel/cpu/*.h)
+OBJ=${C_SOURCES:.c=.o kernel/cpu/isr_wrapper.o}
 
 # CC=/usr/local/i386elfgcc/bin/i386-elf-gcc
 CC=/usr/bin/gcc
@@ -34,7 +32,6 @@ kernel.elf: kernel/kernel_entry.o ${OBJ}
 # Generic rules
 %.o: %.c ${HEADERS}
 	$(CC) -g -fno-pie -fno-stack-protector -m32 -ffreestanding -c $< -o $@
-#$(CC) -g $(CFLAGS) -ffreestanding -c $< -o $@
 
 %.o: %.asm
 	nasm -f elf $< -o $@
@@ -55,5 +52,5 @@ gdb:
 	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf" -ex "set disassembly-flavor intel" -ex "set architecture i8086" -ex "layout asm" -ex "layout regs"
 
 clean:
-	rm $(OBJ) kernel/kernel_entry.o boot/*.bin
-	rm *.bin *.elf
+	rm kernel/kernel_entry.o boot/*.bin
+	rm *.bin *.elf $(OBJ) 

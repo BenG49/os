@@ -33,3 +33,12 @@ void outw(uint16_t port, uint16_t data)
           ::"dN"(port)
            ,"a"(data));
 }
+
+void pic_eoi(uint8_t irq)
+{
+    // irq also came from PIC2 if >= 8
+    if (irq >= 8)
+        outb(PIC2_CMD, PIC_EOI);
+    
+    outb(PIC1_CMD, PIC_EOI);
+}
