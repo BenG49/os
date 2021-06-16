@@ -58,7 +58,7 @@ irq_common_stub:
 
     pop ebx
     mov ds, bx
-    mov ds, bx
+    mov es, bx
     mov fs, bx
     mov gs, bx
 
