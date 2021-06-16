@@ -477,6 +477,9 @@ static const keycode us_querty_keycodes_extra1[0xEE] = {
     KEY_INVALID,//0xED,MULTIMEDIA
 };
 
+// STARTS AT ' '
+const char shifted[] = " !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
+
 const uint8_t PAUSE_CODES[] = {
     0xe1, 0x1d, 0x45, 0xe1, 0x9d, 0xc5
 };
@@ -550,7 +553,7 @@ static keycode get_keycode(uint8_t scancode)
     }
 
     // normal keys
-    else if (scancode < 0xe0)
+    if (scancode < 0xe0)
     {
         return us_querty_keycodes[scancode];
     }
@@ -566,21 +569,24 @@ static void keyboard_callback(stack_regs regs)
     if (key == -1) { return; }
 
     if (key == KEY_LEFT_SHIFT_PRESSED || key == KEY_RIGHT_SHIFT_PRESSED)
-        flags |= FLAG_SHIFT;    // set bit
+        flags = set_bit(flags, SHIFT);
     else if (key == KEY_LEFT_SHIFT_RELEASED || key == KEY_RIGHT_SHIFT_RELEASED)
-        flags &= (~FLAG_SHIFT); // clear bit
+        flags = clear_bit(flags, SHIFT);
     
     else if (key == KEY_CAPSLOCK_PRESSED)
-        flags |= FLAG_CAPS;     // set bit
+        flags = set_bit(flags, CAPS);
     else if (key == KEY_CAPSLOCK_RELEASED)
-        flags &= (~FLAG_CAPS);  // set bit
+        flags = clear_bit(flags, CAPS);
+
     
     if (key < SCANCODE_SPECIAL)
     {
-        char buf[2];
-        buf[0] = key;
-        buf[1] = '\0';
-        print(buf, WHITE_ON_BLACK);
+        if (bit_test(flags, SHIFT) || bit_test(flags, CAPS))
+        {
+            key = shifted[key - 0x20];
+        }
+
+        printc(key, WHITE_ON_BLACK);
     }
 }
 

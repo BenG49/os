@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-
-#define true (1 == 1)
-#define false (!true)
+#include <stdbool.h>
 
 char *itoa(int i, char *buffer, int base);
 char *reverse(char *buffer, int len);
@@ -34,6 +32,21 @@ static size_t inline strlen(const char *str)
     }
 
     return i;
+}
+
+static bool inline bit_test(uint8_t flag, int bitpos)
+{
+    return (flag >> bitpos) & 1 == 1;
+}
+
+static uint8_t inline set_bit(uint8_t flag, int bitpos)
+{
+    return flag | (1UL << bitpos);
+}
+
+static uint8_t inline clear_bit(uint8_t flag, int bitpos)
+{
+    return flag & ~(1UL << bitpos);
 }
 
 #define asm __asm__ volatile

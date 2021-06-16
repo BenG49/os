@@ -248,8 +248,12 @@ typedef enum
 #define PAUSE_CODE_COUNT 6
 
 #define KB_PORT 0x60 
-#define FLAG_SHIFT    0b00000001
-#define FLAG_CAPS     0b00000010
+
+enum flags
+{
+    SHIFT,
+    CAPS
+};
 
 void init_keyboard();
 
