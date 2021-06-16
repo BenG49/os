@@ -3,6 +3,8 @@
         "ports.h": "c",
         "vga.h": "c",
         "util.h": "c",
-        "idt.h": "c"
+        "idt.h": "c",
+        "isr.h": "c",
+        "timer.h": "c"
     }
 }

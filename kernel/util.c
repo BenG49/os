@@ -1,11 +1,5 @@
 #include "util.h"
 
-void _memcpy(uint16_t *src, uint16_t *dest, int bytes)
-{
-    for (int i = 0; i < bytes; ++i)
-        dest[i] = src[i];
-}
-
 char *reverse(char *str, int len)
 {
     int begin = 0;
@@ -32,17 +26,7 @@ char *itoa(int n, char *str, int base)
 
     if (n == 0)
     {
-        if (base == 16)
-        {
-            str[0] = '0';
-            str[1] = 'x';
-            str[2] = '0';
-            str += 3;
-        } else
-            *str++ = '0';
-
-        *str = '\0';
-
+        str = (base == 16)?"0x0\0":"0\0";
         return str;
     }
 
@@ -78,16 +62,4 @@ char *itoa(int n, char *str, int base)
     str[i] = '\0';
 
     return reverse(str, i);
-}
-
-size_t inline strlen(const char *str)
-{
-    size_t i = 0;
-
-    while (*str++ != 0)
-    {
-        ++i;
-    }
-
-    return i;
 }
