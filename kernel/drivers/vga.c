@@ -82,7 +82,7 @@ void clear()
     set_cursor_offset(0);
 }
 
-void print(const char *str, int color)
+void print(char *str, int color)
 {
     int px_offset = get_cursor_offset();
 

@@ -79,3 +79,15 @@ char *itoa(int n, char *str, int base)
 
     return reverse(str, i);
 }
+
+size_t inline strlen(const char *str)
+{
+    size_t i = 0;
+
+    while (*str++ != 0)
+    {
+        ++i;
+    }
+
+    return i;
+}

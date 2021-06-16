@@ -3,56 +3,41 @@
 [extern isr_handler]
 
 ; takes in IRQ
-%macro IRQ 1
+%macro IRQ 2
     global isr%1
 isr%1:
     cli
     push byte 0
-    push byte %1
+    push byte %2
     jmp irq_common_stub
 %endmacro
 
-%macro ERR_IRQ 1
+%macro ERR_IRQ 2
     global isr%1
 isr%1:
     cli
     ; error already pushed onto stack
-    push byte %1
+    push byte %2
     jmp irq_common_stub
 %endmacro
 
-IRQ 0
-IRQ 1
-IRQ 2
-IRQ 3
-IRQ 4
-IRQ 5
-IRQ 6
-IRQ 7
-ERR_IRQ 8
-IRQ 9
-ERR_IRQ 10
-ERR_IRQ 11
-ERR_IRQ 12
-ERR_IRQ 13
-ERR_IRQ 14
-IRQ 15
-IRQ 16
-IRQ 17
-IRQ 18
-IRQ 19
-IRQ 20
-IRQ 21
-IRQ 22
-IRQ 23
-IRQ 24
-IRQ 25
-IRQ 26
-IRQ 27
-IRQ 28
-IRQ 29
-IRQ 30
-IRQ 31
+; vector offset is 32 and 40 (32-47)
+IRQ     0, 32
+IRQ     1, 33
+IRQ     2, 34
+IRQ     3, 35
+IRQ     4, 36
+IRQ     5, 37
+IRQ     6, 38
+IRQ     7, 39
+ERR_IRQ 8, 40
+IRQ     9, 41
+ERR_IRQ 10, 42
+ERR_IRQ 11, 43
+ERR_IRQ 12, 44
+ERR_IRQ 13, 45
+ERR_IRQ 14, 46
+IRQ     15, 47
 
 irq_common_stub:
     pusha

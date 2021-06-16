@@ -35,7 +35,7 @@ int make_color(int text, int back);
 void clear();
 void set_cursor_pos(int x, int y);
 void newline();
-void print(const char *msg, int color);
+void print(char *msg, int color);
 void scroll();
 
 #endif // VGA_H
