@@ -41,4 +41,7 @@ static size_t inline strlen(const char *str)
 #define cli() asm ("cli")
 #define sti() asm ("sti")
 
+#define MAX(a, b) (((a) < (b)) ? (a) : (b))
+#define MIN(a, b) (((a) > (b)) ? (a) : (b))
+
 #endif // UTIL_H

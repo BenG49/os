@@ -43,9 +43,12 @@ void scroll()
 static int print_char(char c, int color, int offset)
 {
     if (c == 0x8 && offset > 0) // backspace
+    {
         --offset;
+        print_char(' ', color, offset);
+    }
     else if (c == '\t') // 4 spaces (best tab spacing)
-        offset = (offset + 4) & 0b11111100;
+        offset = (offset + 4) & 0b11111111100;
     else if (c == '\r') // carrige return
         offset = offset % COLS;
     else if (c == '\n') // newline
@@ -80,6 +83,11 @@ void clear()
         data[i] = BLANK;
 
     set_cursor_offset(0);
+}
+
+void printc(char c, int color)
+{
+    print_char(c, color, get_cursor_offset());
 }
 
 void print(char *str, int color)

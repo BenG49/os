@@ -8,4 +8,4 @@
 
 void init_timer(uint32_t frequency);
 
-#endif
+#endif // TIMER_H

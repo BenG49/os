@@ -35,6 +35,7 @@ int make_color(int text, int back);
 void clear();
 void set_cursor_pos(int x, int y);
 void newline();
+void printc(char c, int color);
 void print(char *msg, int color);
 void scroll();
 
