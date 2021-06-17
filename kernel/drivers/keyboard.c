@@ -474,7 +474,7 @@ static const keycode us_querty_keycodes_extra1[0xEE] = {
     KEY_INVALID,//0xED,MULTIMEDIA
 };
 
-const char shifted[] = "???????????????????????????????? !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
+const char shifted[] = "??????????\n????????????????????? !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
 
 // for some reason the pause scancode is 5 bytes long, go figure
 const uint8_t PAUSE_CODES[] = {
@@ -485,6 +485,10 @@ uint8_t flags = 0;
 uint8_t pause_state = 0;
 uint8_t prtsc_pstate = 0;
 uint8_t prtsc_rstate = 0;
+
+char kb_buffer[256];
+char *write_ptr = kb_buffer;
+char *read_ptr = kb_buffer;
 
 // complicated annoying state machine
 // returns -1 if waiting for next scancode
@@ -580,6 +584,7 @@ static void keyboard_callback(stack_regs regs)
     uint8_t scancode = inb((uint16_t)KB_PORT);
     keycode key = get_keycode(scancode);
 
+    // waiting for longer scancode sequence
     if (key == -1) { return; }
 
     if (key == KEY_LEFT_SHIFT_PRESSED || key == KEY_RIGHT_SHIFT_PRESSED)
@@ -592,13 +597,26 @@ static void keyboard_callback(stack_regs regs)
     else if (key == KEY_CAPSLOCK_RELEASED)
         flags = clear_bit(flags, CAPS);
 
-    
     if (key < SCANCODE_SPECIAL)
     {
         if (bit_test(flags, SHIFT) || bit_test(flags, CAPS))
         {
             key = shifted[key];
         }
+        // if shift key pressed, add newline
+        else if (key == '\n')
+        {
+            // call command
+            shell_cmd(read_ptr);
+            // reset ptr
+            read_ptr = write_ptr;
+            return;
+        }
+
+        if (key == '\b')
+            *--write_ptr = '\0';
+        else
+            *write_ptr++ = key;
 
         printc(key, WOB);
     }
@@ -607,4 +625,5 @@ static void keyboard_callback(stack_regs regs)
 void init_keyboard()
 {
     set_handler(IRQ1, &keyboard_callback);
+    memset(kb_buffer, 0, 256);
 }

@@ -43,7 +43,8 @@ void newline();
 void printc(char c, int color);
 // wrapper function for itoa, uses 255 byte buffer
 void printi(int n, int base, int color);
-void print(char *msg, int color);
+void print(char *msg);
+void print_color(char *msg, int color);
 void scroll();
 
 #endif // VGA_H

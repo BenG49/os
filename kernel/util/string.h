@@ -5,5 +5,6 @@
 
 char *itoa(int i, char *buffer, int base);
 char *reverse(char *buffer, int len);
+bool streq(char *a, char* b);
 
 #endif // STRING_H

@@ -40,7 +40,7 @@ void scroll()
 
 static int print_char(char c, int color, int offset)
 {
-    if (c == 0x8 && offset > 0) // backspace
+    if (c == '\b' && offset > 0)    // backspace
     {
         --offset;
         print_char(' ', color, offset);
@@ -88,18 +88,25 @@ void printc(char c, int color)
     print_char(c, color, get_cursor_offset());
 }
 
-void print(char *str, int color)
+void print_color(char *str, int color)
 {
     int px_offset = get_cursor_offset();
+    // no way anyone's going past 2^16, right?
+    uint16_t i = 0;
 
-    while (*str != 0)
-        px_offset = print_char(*str++, color, px_offset);
+    while (str[i] != 0)
+        px_offset = print_char(str[i++], color, px_offset);
+}
+
+void print(char *str)
+{
+    print_color(str, WOB);
 }
 
 void printi(int n, int base, int color)
 {
     char buf[255];
-    print(itoa(n, buf, base), color);
+    print_color(itoa(n, buf, base), color);
 }
 
 int make_color(int text, int back)

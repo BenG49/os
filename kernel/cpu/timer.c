@@ -1,33 +1,43 @@
 #include "timer.h"
 
 uint32_t tick = 0;
+uint32_t f = PIT_FREQ;
 
-static void timer_callback(stack_regs regs)
-{
-    ++tick;
-    /*set_cursor_pos(0, 24);
-    print("Tick: ", WHITE_ON_BLACK);
-    char buf[16];
-    print(itoa(tick, buf, 16), WHITE_ON_BLACK);
-    set_cursor_pos(0, 0);*/
-}
+static void timer_callback(stack_regs regs) { ++tick; }
 
+// default is 18.222hz
 void init_timer(uint32_t frequency)
 {
     // set callback
     set_handler(IRQ0, &timer_callback);
 
     // set frequency
-    uint8_t divisor = MIN(PIT_FREQ / frequency, 0xffff);
-    cli();
+    if (frequency != 1)
+    {
+        uint32_t divisor = PIT_FREQ / frequency;
+        cli();
 
-    // divisor of 0 used to specify 65535
-    if (divisor == 0xffff)
-        divisor = 0;
+        // divisor of 0 used to specify 65536
+        if (divisor > 0xffff)
+            divisor = 0;
 
-    outb(PIT_CH0, divisor & 0xff);
-    outb(PIT_CH0, (divisor & 0xff00) >> 8);
+        uint8_t l = (uint8_t)(divisor & 0xff);
+        uint8_t h = (uint8_t)((divisor > 8) & 0xff);
 
-    sti();
+        // set command
+        outb(0x43, 0x36);
+        outb(PIT_CH0, l);
+        outb(PIT_CH0, h);
+
+        sti();
+    } else
+        frequency = 65536;
+
+    f = PIT_FREQ / frequency;
     return;
+}
+
+uint32_t get_seconds()
+{
+    return tick / f;
 }

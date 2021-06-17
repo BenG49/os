@@ -63,3 +63,18 @@ char *itoa(int n, char *str, int base)
 
     return reverse(str, i);
 }
+
+bool streq(char *a, char *b)
+{
+    int i = 0;
+
+    while (a[i] != 0)
+    {
+        if (a[i] != b[i])
+            return false;
+        ++i;
+    }
+
+    // strings are same length
+    return b[i] == 0;
+}
