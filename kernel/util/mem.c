@@ -34,3 +34,21 @@ int memcmp(const void *ptr1, const void *ptr2, size_t num)
 
     return cptr1[i] > cptr2[i] ? -1 : 1;
 }
+
+void *memmove(void *dest, const void* src, size_t bytes)
+{
+    char *csrc = (char *)src;
+    char *cdest = (char *)dest;
+
+    // buffer to save src
+    char temp[bytes];
+
+    for (int i = 0; i < bytes; ++i)
+        temp[i] = csrc[i];
+    
+    for (int i = 0; i < bytes; ++i)
+        cdest[i] = temp[i];
+
+    // free(temp);
+    return dest;
+}
