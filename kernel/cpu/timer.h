@@ -2,8 +2,8 @@
 #define TIMER_H
 
 #include "../drivers/vga.h"
+#include "../util/util.h"
 #include "isr.h"
-#include <float.h>
 
 #define PIT_FREQ 1193182
 #define PIT_CH0 0x40

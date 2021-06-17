@@ -25,15 +25,15 @@ const char *messages[] = {
     "Reserved"
 };
 
-void isr_handler(stack_regs regs)
+void isr_handler(stack_regs *regs)
 {
     // end interupt
-    pic_eoi((uint8_t)regs.int_no);
+    pic_eoi((uint8_t)regs->int_no);
 
     // call interrupt
-    if (handlers[regs.int_no] != 0)
+    if (handlers[regs->int_no] != 0)
     {
-        handlers[regs.int_no](regs);
+        handlers[regs->int_no](regs);
     }
 }
 

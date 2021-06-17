@@ -14,12 +14,12 @@ int kernel_main()
 
 void shell_cmd(char *cmd)
 {
-    if (streq(cmd, "halt"))
+    if (strcmp(cmd, "halt") == 0)
     {
         print("Sorry for wasting your time today!");
         asm("hlt");
     }
-    else if (streq(cmd, "time"))
+    else if (strcmp(cmd, "time") == 0)
     {
         uint32_t time = get_seconds();
 

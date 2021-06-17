@@ -3,7 +3,7 @@
 
 #include "../cpu/ports.h"
 #include "../util/string.h"
-#include "../util/util.h"
+#include "../util/mem.h"
 
 #define VIDEO_ADDR 0xb8000
 #define ROWS 25

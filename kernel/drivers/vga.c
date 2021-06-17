@@ -26,7 +26,7 @@ void scroll()
 
     for (int i = 0; i < ROWS; ++i)
     {
-        _memcpy(row, row - COLS, COLS);
+        memcpy(row - COLS, row, COLS);
         row += COLS;
     }
 

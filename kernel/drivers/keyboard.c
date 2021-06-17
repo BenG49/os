@@ -579,7 +579,7 @@ static keycode get_keycode(uint8_t scancode)
     return KEY_INVALID;
 };
 
-static void keyboard_callback(stack_regs regs)
+static void keyboard_callback(stack_regs *regs)
 {
     uint8_t scancode = inb((uint16_t)KB_PORT);
     keycode key = get_keycode(scancode);

@@ -3,7 +3,7 @@
 
 #define INTERRUPT_COUNT 0x100
 
-#include "../util/util.h"
+#include "../util/mem.h"
 #include "ports.h"
 
 // external isr stubs from asm file

@@ -64,17 +64,17 @@ char *itoa(int n, char *str, int base)
     return reverse(str, i);
 }
 
-bool streq(char *a, char *b)
+int strcmp(const char *a, const char *b)
 {
     int i = 0;
 
-    while (a[i] != 0)
+    while (a[i] == b[i] && a[i] != 0)
     {
-        if (a[i] != b[i])
-            return false;
         ++i;
     }
 
-    // strings are same length
-    return b[i] == 0;
+    if (a[i] == 0)
+        return 0;
+
+    return a[i] < b[i] ? -1 : 1;
 }

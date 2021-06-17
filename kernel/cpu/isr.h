@@ -30,17 +30,17 @@ typedef struct
     // pushed in asm
     uint32_t ds;
     // pushed by pushad
-    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    uint32_t edi, esi, ebp, useless, ebx, edx, ecx, eax;
     // data pushed by isr
     uint32_t int_no, err_code;
-    // auto pushed by cpu?
-    uint32_t eip, cs, eflaps, useresp, ss;
+    // auto pushed by cpu
+    uint32_t eip, cs, eflaps, esp, ss;
 } __attribute__((packed)) stack_regs;
 
 // define function that will handle isr
-typedef void (*handler)(stack_regs);
+typedef void (*handler)(stack_regs*);
 
-void isr_handler(stack_regs regs);
+void isr_handler(stack_regs *regs);
 void set_handler(int n, handler h);
 
 #endif // ISR_H

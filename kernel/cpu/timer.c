@@ -3,7 +3,7 @@
 uint32_t tick = 0;
 uint32_t f = PIT_FREQ;
 
-static void timer_callback(stack_regs regs) { ++tick; }
+static void timer_callback(stack_regs *regs) { ++tick; }
 
 // default is 18.222hz
 void init_timer(uint32_t frequency)

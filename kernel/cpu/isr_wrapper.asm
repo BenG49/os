@@ -51,12 +51,14 @@ irq_common_stub:
     mov es, ax
     mov fs, ax
     mov gs, ax
+    push esp    ; pointer to base of registers on stack
 
     ; call c handler
     cld
     call isr_handler
 
-    pop ebx
+    pop ebx     ; pop esp
+    pop ebx     ; pop ds
     mov ds, bx
     mov es, bx
     mov fs, bx

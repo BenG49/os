@@ -4,6 +4,8 @@
 #include "vga.h"
 #include "../cpu/isr.h"
 #include "../kernel.h"
+#include "../util/mem.h"
+#include "../util/util.h"
 
 /**
  * thanks to https://github.com/RicardoLuis0/simple-ps2-keyboard-driver-osdev
