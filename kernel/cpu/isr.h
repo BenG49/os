@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "ports.h"
+#include "../drivers/vga.h"
 
 #define INTERRUPT_COUNT 0x100
 

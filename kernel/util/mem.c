@@ -32,7 +32,7 @@ int memcmp(const void *ptr1, const void *ptr2, size_t num)
         ++i;
     }
 
-    return cptr1[i] > cptr2[i] ? -1 : 1;
+    return cptr1[i] - cptr2[i];
 }
 
 void *memmove(void *dest, const void* src, size_t bytes)

@@ -7,6 +7,26 @@
 #include "ports.h"
 
 // external isr stubs from asm file
+extern void exc0();
+extern void exc1();
+extern void exc2();
+extern void exc3();
+extern void exc4();
+extern void exc5();
+extern void exc6();
+extern void exc7();
+extern void exc8();
+extern void exc9();
+extern void exc10();
+extern void exc11();
+extern void exc12();
+extern void exc13();
+extern void exc14();
+extern void exc15();
+extern void exc16();
+extern void exc17();
+extern void exc18();
+
 extern void isr0();
 extern void isr1();
 extern void isr2();

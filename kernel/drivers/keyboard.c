@@ -487,8 +487,7 @@ uint8_t prtsc_pstate = 0;
 uint8_t prtsc_rstate = 0;
 
 char kb_buffer[256];
-char *write_ptr = kb_buffer;
-char *read_ptr = kb_buffer;
+int write_ptr = 0;
 
 // complicated annoying state machine
 // returns -1 if waiting for next scancode
@@ -607,16 +606,20 @@ static void keyboard_callback(stack_regs *regs)
         else if (key == '\n')
         {
             // call command
-            shell_cmd(read_ptr);
+            shell_cmd(kb_buffer);
+            // clear buffer
+            for (int i = 0; i < write_ptr; ++i)
+                kb_buffer[i] = 0;
+
             // reset ptr
-            read_ptr = write_ptr;
+            write_ptr = 0;
             return;
         }
 
         if (key == '\b')
-            *--write_ptr = '\0';
+            kb_buffer[--write_ptr] = '\0';
         else
-            *write_ptr++ = key;
+            kb_buffer[write_ptr++] = key;
 
         printc(key, WOB);
     }
@@ -625,5 +628,5 @@ static void keyboard_callback(stack_regs *regs)
 void init_keyboard()
 {
     set_handler(IRQ1, &keyboard_callback);
-    memset(kb_buffer, 0, 256);
+    memset(kb_buffer, 0, 0x100);
 }

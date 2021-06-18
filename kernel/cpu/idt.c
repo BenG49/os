@@ -60,6 +60,28 @@ void init_idt()
     PIC_init();
 
     // init idt gates
+    // exceptions
+    set_idt_gate(0, (uint32_t)exc0);
+    set_idt_gate(0, (uint32_t)exc1);
+    set_idt_gate(0, (uint32_t)exc2);
+    set_idt_gate(0, (uint32_t)exc3);
+    set_idt_gate(0, (uint32_t)exc4);
+    set_idt_gate(0, (uint32_t)exc5);
+    set_idt_gate(0, (uint32_t)exc6);
+    set_idt_gate(0, (uint32_t)exc7);
+    set_idt_gate(0, (uint32_t)exc8);
+    set_idt_gate(0, (uint32_t)exc9);
+    set_idt_gate(0, (uint32_t)exc10);
+    set_idt_gate(0, (uint32_t)exc11);
+    set_idt_gate(0, (uint32_t)exc12);
+    set_idt_gate(0, (uint32_t)exc13);
+    set_idt_gate(0, (uint32_t)exc14);
+    set_idt_gate(0, (uint32_t)exc15);
+    set_idt_gate(0, (uint32_t)exc16);
+    set_idt_gate(0, (uint32_t)exc17);
+    set_idt_gate(0, (uint32_t)exc18);
+
+    // hardware interrupts
     set_idt_gate(IRQ0,  (uint32_t)isr0);
     set_idt_gate(IRQ1,  (uint32_t)isr1);
     set_idt_gate(IRQ2,  (uint32_t)isr2);

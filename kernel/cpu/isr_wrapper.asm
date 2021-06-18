@@ -21,6 +21,46 @@ isr%1:
     jmp irq_common_stub
 %endmacro
 
+; exceptions (basically the same but function is named exc)
+%macro EXC 1
+    global exc%1
+exc%1:
+    cli
+    push byte 0
+    push byte %1
+    jmp irq_common_stub
+%endmacro
+
+%macro ERR_EXC 1
+    global exc%1
+exc%1:
+    cli
+    ; error already pushed onto stack
+    push byte %1
+    jmp irq_common_stub
+%endmacro
+
+; EXCEPTIONS
+EXC 0
+EXC 1
+EXC 2
+EXC 3
+EXC 4
+EXC 5
+EXC 6
+EXC 7
+ERR_EXC 8
+EXC 9
+ERR_EXC 10
+ERR_EXC 11
+ERR_EXC 12
+ERR_EXC 13
+ERR_EXC 14
+EXC 15
+EXC 16
+ERR_EXC 17
+EXC 18
+
 ; vector offset is 32 and 40 (32-47)
 IRQ     0, 32
 IRQ     1, 33

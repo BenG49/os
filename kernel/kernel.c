@@ -9,6 +9,8 @@ int kernel_main()
     clear();
     print("Type halt to halt and catch fire\n> ");
 
+    // asm("div %0" :: "r"(0));
+
     return 0;
 }
 
@@ -16,6 +18,7 @@ void shell_cmd(char *cmd)
 {
     if (strcmp(cmd, "halt") == 0)
     {
+        clear();
         print("Sorry for wasting your time today!");
         asm("hlt");
     }

@@ -1,4 +1,5 @@
 #include "ports.h"
+#include "../util/string.h"
 
 uint8_t inb(uint16_t port)
 {
@@ -44,4 +45,22 @@ void pic_eoi(uint8_t irq)
     }
     
     outb(PIC1_CMD, PIC_EOI);
+}
+
+void log_char(char c)
+{
+    outb(COM1, c);
+}
+
+void log(char *str)
+{
+    int i = 0;
+    while (str[i])
+        log_char(str[i++]);
+}
+
+void log_int(int n, int base)
+{
+    char buf[0xff];
+    log(itoa(n, buf, base));
 }

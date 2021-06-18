@@ -67,14 +67,10 @@ char *itoa(int n, char *str, int base)
 int strcmp(const char *a, const char *b)
 {
     int i = 0;
-
-    while (a[i] == b[i] && a[i] != 0)
+    while (a[i] && a[i] == b[i])
     {
         ++i;
     }
 
-    if (a[i] == 0)
-        return 0;
-
-    return a[i] < b[i] ? -1 : 1;
+    return a[i] - b[i];
 }

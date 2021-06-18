@@ -26,10 +26,13 @@ kernel:
     call print
     call newline
 
-    mov bx, 0x1000          ; buffer addr
+    ; 0x500 - 0x7bff (30.463 kb)
+    mov bx, 0x500           ; buffer addr
+    ; 15.8 kb, about half of free area
     mov dh, 31              ; sector count
     mov dl, [BOOT_DRIVE]    ; load drive from memory
     call read_sectors
+
     ret
 
 loadpm:
@@ -56,7 +59,8 @@ initpm:
     mov gs, ax
 
     ; update 32 bit stack registers
-    mov ebp, 0x90000
+    ; move stack to area of memory from 0x7e00-0x7fff
+    mov ebp, 0x7ffff
     mov esp, ebp
 
     sti                 ; set interrupt flag
@@ -68,7 +72,7 @@ MSG_PROT_MODE db "Switched to 32 bit protected mode", 0
 MSG_KERNEL    db "Loading kernel", 0
 
 BOOT_DRIVE equ 0
-KERNEL_ADDR equ 0x1000
+KERNEL_ADDR equ 0x500
 
 ; Magic number
 times 510 - ($-$$) db 0
