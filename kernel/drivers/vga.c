@@ -83,12 +83,12 @@ void clear()
     set_cursor_offset(0);
 }
 
-void printc(char c, int color)
+void putchar(char c)
 {
-    print_char(c, color, get_cursor_offset());
+    print_char(c, WOB, get_cursor_offset());
 }
 
-void print_color(char *str, int color)
+void puts_color(char *str, int color)
 {
     int px_offset = get_cursor_offset();
     // no way anyone's going past 2^16, right?
@@ -98,15 +98,25 @@ void print_color(char *str, int color)
         px_offset = print_char(str[i++], color, px_offset);
 }
 
-void print(char *str)
+void puts(char *str)
 {
-    print_color(str, WOB);
+    puts_color(str, WOB);
 }
 
-void printi(int n, int base, int color)
+// more efficient than itoa, thanks to pitust from osdev discord
+void putint(int n, int base)
 {
-    char buf[255];
-    print_color(itoa(n, buf, base), color);
+    char tmpb[21];
+    int i = 0;
+
+    while (n > 0)
+    {
+        tmpb[i++] = "0123456789abcdef"[n % base];
+        n /= base;
+    }
+
+    while (i >= 0)
+        putchar(tmpb[i--]);
 }
 
 int make_color(int text, int back)

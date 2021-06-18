@@ -61,6 +61,15 @@ void log(char *str)
 
 void log_int(int n, int base)
 {
-    char buf[0xff];
-    log(itoa(n, buf, base));
+    char tmpb[21];
+    int i = 0;
+
+    while (n > 0)
+    {
+        tmpb[i++] = "0123456789abcdef"[n % base];
+        n /= base;
+    }
+
+    while (i >= 0)
+        log_char(tmpb[i--]);
 }

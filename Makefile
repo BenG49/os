@@ -2,7 +2,8 @@
 # $< = first dependency
 # $^ = all dependencies
 RAM_SIZE=4G
-SERIAL=serial.log
+SERIAL=log/serial.log
+QLOG=log/qemu.log
 
 C_SOURCES=$(shell find ./ -type f -name '*.c')
 HEADERS=$(shell find ./ -type f -name '*.h')
@@ -52,7 +53,7 @@ run: $(OUT_IMG)
 	qemu-system-i386 $(QFLAGS)
 
 debug: $(OUT_IMG) kernel.elf
-	qemu-system-i386 -S -gdb tcp::1234 -d guest_errors,int $(QFLAGS) &
+	qemu-system-i386 -S -gdb tcp::1234 -d guest_errors,int -D $(QLOG) $(QFLAGS) &
 	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf" -ex "set disassembly-flavor intel" -ex "set architecture i8086" -ex "layout asm" -ex "layout regs"
 
 clean:

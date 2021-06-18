@@ -62,24 +62,24 @@ void init_idt()
     // init idt gates
     // exceptions
     set_idt_gate(0, (uint32_t)exc0);
-    set_idt_gate(0, (uint32_t)exc1);
-    set_idt_gate(0, (uint32_t)exc2);
-    set_idt_gate(0, (uint32_t)exc3);
-    set_idt_gate(0, (uint32_t)exc4);
-    set_idt_gate(0, (uint32_t)exc5);
-    set_idt_gate(0, (uint32_t)exc6);
-    set_idt_gate(0, (uint32_t)exc7);
-    set_idt_gate(0, (uint32_t)exc8);
-    set_idt_gate(0, (uint32_t)exc9);
-    set_idt_gate(0, (uint32_t)exc10);
-    set_idt_gate(0, (uint32_t)exc11);
-    set_idt_gate(0, (uint32_t)exc12);
-    set_idt_gate(0, (uint32_t)exc13);
-    set_idt_gate(0, (uint32_t)exc14);
-    set_idt_gate(0, (uint32_t)exc15);
-    set_idt_gate(0, (uint32_t)exc16);
-    set_idt_gate(0, (uint32_t)exc17);
-    set_idt_gate(0, (uint32_t)exc18);
+    set_idt_gate(1, (uint32_t)exc1);
+    set_idt_gate(2, (uint32_t)exc2);
+    set_idt_gate(3, (uint32_t)exc3);
+    set_idt_gate(4, (uint32_t)exc4);
+    set_idt_gate(5, (uint32_t)exc5);
+    set_idt_gate(6, (uint32_t)exc6);
+    set_idt_gate(7, (uint32_t)exc7);
+    set_idt_gate(8, (uint32_t)exc8);
+    set_idt_gate(9, (uint32_t)exc9);
+    set_idt_gate(10, (uint32_t)exc10);
+    set_idt_gate(11, (uint32_t)exc11);
+    set_idt_gate(12, (uint32_t)exc12);
+    set_idt_gate(13, (uint32_t)exc13);
+    set_idt_gate(14, (uint32_t)exc14);
+    set_idt_gate(15, (uint32_t)exc15);
+    set_idt_gate(16, (uint32_t)exc16);
+    set_idt_gate(17, (uint32_t)exc17);
+    set_idt_gate(18, (uint32_t)exc18);
 
     // hardware interrupts
     set_idt_gate(IRQ0,  (uint32_t)isr0);

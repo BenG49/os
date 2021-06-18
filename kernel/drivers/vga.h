@@ -39,12 +39,11 @@ int make_color(int text, int back);
 void clear();
 void set_cursor_pos(int x, int y);
 void newline();
-// prints single char
-void printc(char c, int color);
-// wrapper function for itoa, uses 255 byte buffer
-void printi(int n, int base, int color);
-void print(char *msg);
-void print_color(char *msg, int color);
+
+void putchar(char c);
+void putint(int n, int base);
+void puts(char *msg);
+void puts_color(char *msg, int color);
 void scroll();
 
 #endif // VGA_H

@@ -37,7 +37,7 @@ void isr_handler(stack_regs *regs)
         if (i > 19)
             i = 19;
         
-        print(messages[i]);
+        puts(messages[i]);
 
         asm("hlt");
     }

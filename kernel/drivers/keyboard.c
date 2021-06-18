@@ -621,7 +621,7 @@ static void keyboard_callback(stack_regs *regs)
         else
             kb_buffer[write_ptr++] = key;
 
-        printc(key, WOB);
+        putchar(key);
     }
 }
 
