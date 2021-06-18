@@ -1,20 +1,25 @@
 # $@ = target file
 # $< = first dependency
 # $^ = all dependencies
+RAM_SIZE=4G
+SERIAL=serial.log
 
-C_SOURCES=$(wildcard kernel/*.c kernel/drivers/*.c kernel/cpu/*.c kernel/util/*.c)
-HEADERS=$(wildcard kernel/*.h kernel/drivers/*.h kernel/cpu/*.h kernel/util/*.h)
+C_SOURCES=$(shell find ./ -type f -name '*.c')
+HEADERS=$(shell find ./ -type f -name '*.h')
 OBJ=${C_SOURCES:.c=.o kernel/cpu/isr_wrapper.o}
 
-# CC=/usr/local/i386elfgcc/bin/i386-elf-gcc
 CC=/usr/bin/gcc
-# GDB=/usr/local/i386elfgcc/bin/i386-elf-gdb
 GDB=/usr/bin/gdb
-# LD=/usr/local/i386elfgcc/bin/i386-elf-ld
 LD=/usr/bin/ld
 
 OUT_IMG=os-img.bin
-CFLAGS= -g -m32 -fno-builtin -fpic -fno-pie -fno-stack-protector -mno-red-zone -Wall -Werror
+CFLAGS= -g -m32 -fno-builtin -fpic -fno-pie -fno-stack-protector	\
+		-mno-red-zone -Wall -Werror -nostartfiles -nodefaultlibs
+QFLAGS=	-machine q35									\
+		-drive format=raw,if=floppy,file=$(OUT_IMG)		\
+		-serial file:$(SERIAL)							\
+		-no-reboot -no-shutdown							\
+		-m $(RAM_SIZE)
 
 .PHONY: run debug gdb clean
 
@@ -28,7 +33,7 @@ kernel.bin: kernel/kernel_entry.o ${OBJ}
 
 # Used for debug
 kernel.elf: kernel/kernel_entry.o ${OBJ}
-	$(LD) -m elf_i386 -o $@ -Ttext 0x1000 $^
+	$(LD) -melf_i386 -o $@ -Ttext 0x1000 $^
 
 # Generic rules
 %.o: %.c ${HEADERS}
@@ -41,15 +46,13 @@ kernel.elf: kernel/kernel_entry.o ${OBJ}
 	nasm -f bin $< -o $@
 
 %.s: %.c
-	$(CC) $(CFLAGS) -S -fno-stack-protector -fno-asynchronous-unwind-tables -fno-dwarf2-cfi-asm -masm=intel -ffreestanding -c $< -o $@
+	$(CC) $(CFLAGS) -S -fno-asynchronous-unwind-tables -fno-dwarf2-cfi-asm -masm=intel -c $< -o $@
 
 run: $(OUT_IMG)
-	qemu-system-i386 -machine q35 -fda $<
+	qemu-system-i386 $(QFLAGS)
 
 debug: $(OUT_IMG) kernel.elf
-	qemu-system-i386 -machine q35 -S -gdb tcp::1234 -d guest_errors,int -fda $(OUT_IMG) &
-
-gdb:
+	qemu-system-i386 -S -gdb tcp::1234 -d guest_errors,int $(QFLAGS) &
 	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file kernel.elf" -ex "set disassembly-flavor intel" -ex "set architecture i8086" -ex "layout asm" -ex "layout regs"
 
 clean:
