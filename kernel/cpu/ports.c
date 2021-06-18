@@ -61,6 +61,18 @@ void log(char *str)
 
 void log_int(int n, int base)
 {
+    if (base == 16)
+    {
+        log_char('0');
+        log_char('x');
+    }
+
+    if (n == 0)
+    {
+        log_char('0');
+        return;
+    }
+
     char tmpb[21];
     int i = 0;
 
@@ -71,5 +83,5 @@ void log_int(int n, int base)
     }
 
     while (i >= 0)
-        log_char(tmpb[i--]);
+        log_char(tmpb[--i]);
 }

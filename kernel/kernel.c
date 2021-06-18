@@ -20,13 +20,24 @@ void shell_cmd(char *cmd)
         puts("Sorry for wasting your time today!");
         asm("hlt");
     }
-    else if (strcmp(cmd, "time") == 0)
+    else if (strcmp(cmd, "uptime") == 0)
     {
-        uint32_t time = get_seconds();
+        int seconds = (int)get_seconds();
+        int hours = seconds / 360;
+        int minutes = seconds / 60;
 
         newline();
-        putint((int)time, 10);
-        puts(" seconds");
+        putint(hours, 10);
+        putchar(':');
+
+        if (minutes < 10)
+            putchar('0');
+        putint(minutes, 10);
+        putchar(':');
+
+        if (seconds < 10)
+            putchar('0');
+        putint(seconds, 10);
     }
     else
     {

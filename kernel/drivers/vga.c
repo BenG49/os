@@ -106,6 +106,18 @@ void puts(char *str)
 // more efficient than itoa, thanks to pitust from osdev discord
 void putint(int n, int base)
 {
+    if (base == 16)
+    {
+        putchar('0');
+        putchar('x');
+    }
+
+    if (n == 0)
+    {
+        putchar('0');
+        return;
+    }
+
     char tmpb[21];
     int i = 0;
 
@@ -116,7 +128,7 @@ void putint(int n, int base)
     }
 
     while (i >= 0)
-        putchar(tmpb[i--]);
+        putchar(tmpb[--i]);
 }
 
 int make_color(int text, int back)

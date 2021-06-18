@@ -616,11 +616,20 @@ static void keyboard_callback(stack_regs *regs)
             return;
         }
 
+        // backspace
         if (key == '\b')
-            kb_buffer[--write_ptr] = '\0';
-        else
-            kb_buffer[write_ptr++] = key;
+        {
+            if(write_ptr > 0)
+            {
+                kb_buffer[--write_ptr] = '\0';
+                putchar(key);
+            }
 
+            // don't write to keyboard buffer if backspace
+            return;
+        }
+
+        kb_buffer[write_ptr++] = key;
         putchar(key);
     }
 }

@@ -93,7 +93,7 @@ irq_common_stub:
     mov gs, ax
     push esp    ; pointer to base of registers on stack
 
-    ; call c handler
+    ; call C handler
     cld
     call isr_handler
 
