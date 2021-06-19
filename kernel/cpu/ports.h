@@ -29,7 +29,7 @@ void outw(uint16_t port, uint16_t data);
 // qemu logging
 void log_char(char c);
 void log(char *str);
-// wrapper for itoa
+// putint
 void log_int(int n, int base);
 
 // send end of interrupt

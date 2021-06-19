@@ -2,7 +2,7 @@
 #define KEYBOARD_H
 
 #include "vga.h"
-#include "../cpu/isr.h"
+#include "../cpu/int/isr.h"
 #include "../kernel.h"
 #include "../util/mem.h"
 #include "../util/util.h"

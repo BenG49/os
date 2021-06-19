@@ -1,7 +1,7 @@
 #include "timer.h"
 
-uint32_t tick = 0;
-uint32_t f = PIT_FREQ;
+uint32_t tick;
+uint32_t f;
 
 static void timer_callback(stack_regs *regs) { ++tick; }
 
@@ -34,6 +34,7 @@ void init_timer(uint32_t frequency)
         frequency = 65536;
 
     f = PIT_FREQ / frequency;
+    tick = 0;
     return;
 }
 

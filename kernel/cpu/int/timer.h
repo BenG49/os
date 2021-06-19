@@ -1,8 +1,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "../drivers/vga.h"
-#include "../util/util.h"
+#include "../../drivers/vga.h"
+#include "../../util/util.h"
 #include "isr.h"
 
 #define PIT_FREQ 1193182

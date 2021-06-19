@@ -5,17 +5,18 @@ RAM_SIZE=4G
 SERIAL=log/serial.log
 QLOG=log/qemu.log
 
-C_SOURCES=$(shell find ./ -type f -name '*.c')
-HEADERS=$(shell find ./ -type f -name '*.h')
-OBJ=${C_SOURCES:.c=.o kernel/cpu/isr_wrapper.o}
+C_SOURCES=$(shell find ./kernel/ -type f -name '*.c')
+HEADERS=$(shell find ./kernel/ -type f -name '*.h')
+ASM=$(shell find ./kernel/ -type f -name '*.asm')
+OBJ := $(filter-out ./kernel/kernel_entry.o, ${ASM:.asm=.o} ${C_SOURCES:.c=.o})
 
 CC=/usr/bin/gcc
 GDB=/usr/bin/gdb
 LD=/usr/bin/ld
 
 OUT_IMG=os-img.bin
-CFLAGS= -g -m32 -fno-builtin -fpic -fno-pie -fno-stack-protector	\
-		-mno-red-zone -Wall -Werror -nostartfiles -nodefaultlibs
+CFLAGS= -m32 -fno-builtin -fpic -fno-pie -fno-stack-protector	\
+		-mno-red-zone -Wall -Werror -nostartfiles -nodefaultlibs -ffreestanding
 QFLAGS=	-machine q35									\
 		-drive format=raw,if=floppy,file=$(OUT_IMG)		\
 		-serial file:$(SERIAL)							\
@@ -30,7 +31,6 @@ $(OUT_IMG): boot/bootsect.bin kernel.bin
 # KERNEL
 kernel.bin: kernel/kernel_entry.o ${OBJ}
 	$(LD) -m elf_i386 -o $@ -T link.ld $^
-#$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # Used for debug
 kernel.elf: kernel/kernel_entry.o ${OBJ}
@@ -38,7 +38,7 @@ kernel.elf: kernel/kernel_entry.o ${OBJ}
 
 # Generic rules
 %.o: %.c ${HEADERS}
-	$(CC) $(CFLAGS) -ffreestanding -c $< -o $@
+	$(CC) $(CFLAGS) -g -c $< -o $@
 
 %.o: %.asm
 	nasm -f elf $< -o $@
