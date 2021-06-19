@@ -2,8 +2,8 @@
 #define KERNEL_H
 
 #include "drivers/keyboard.h"
-#include "cpu/idt.h"
-#include "cpu/timer.h"
+#include "cpu/int/idt.h"
+#include "cpu/int/timer.h"
 
 void shell_cmd(char *cmd);
 
