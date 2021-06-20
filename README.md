@@ -1,5 +1,7 @@
 # os
 
+UNFINISHED
+
 Small x86 kernel and bootloader, currently ring 0 protected mode.
 
 Resources:
