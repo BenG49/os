@@ -1,25 +1,31 @@
-OUTPUT_FORMAT("binary")
-ENTRY(start)
-phys = 0x00000500;
+/* _start is entry point */
+ENTRY(_start)
+
 SECTIONS
 {
-  .text phys : AT(phys) {
-    code = .;
-    *(.text)
-    *(.rodata)
-    . = ALIGN(4096);
-  }
-  .data : AT(phys + (data - code))
-  {
-    data = .;
-    *(.data)
-    . = ALIGN(4096);
-  }
-  .bss : AT(phys + (bss - code))
-  {
-    bss = .;
-    *(.bss)
-    . = ALIGN(4096);
-  }
-  end = .;
+    /* higher half kernel */
+    . = 0xffffffff80200000;
+
+    /* Make sure that the stivale header doesn't get discarded */
+    .stivale2hdr : {
+        KEEP(*(.stivale2hdr))
+    }
+
+    /* Then let's place all the other traditional executable sections afterwards. */
+    .text : {
+        *(.text*)
+    }
+
+    .rodata : {
+        *(.rodata*)
+    }
+
+    .data : {
+        *(.data*)
+    }
+
+    .bss : {
+        *(COMMON)
+        *(.bss*)
+    }
 }
