@@ -76,15 +76,15 @@ extern void isr15();
  */
 typedef struct
 {
-    uint16_t offset1;
+    uint16_t offset_low;
     uint16_t selector;
     uint8_t ist;        // only low 3 bits are used
     uint8_t flags;
-    uint16_t offset2;
-    uint32_t offset3;
+    uint16_t offset_mid;
+    uint32_t offset_high;
     uint32_t zero;
-// packed has struct vars as close as possible
 } __attribute__((packed)) idt_gate;
+// packed has struct vars as close as possible
 
 typedef struct
 {

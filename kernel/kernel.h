@@ -3,6 +3,7 @@
 
 #include "drivers/vga.h"
 
+#include "cpu/int/gdt.h"
 #include "cpu/int/idt.h"
 #include "cpu/int/timer.h"
 #include "drivers/keyboard.h"
