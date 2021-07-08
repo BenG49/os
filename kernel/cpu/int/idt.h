@@ -1,9 +1,8 @@
 #ifndef IDT_H
 #define IDT_H
 
-#define INTERRUPT_COUNT 0x100
-
 #include "../ports.h"
+#include "../../drivers/vga.h"
 #include "../../lib/mem.h"
 
 // external isr stubs from asm file
@@ -62,6 +61,8 @@ extern void isr15();
 #define IRQ14 46
 #define IRQ15 47
 
+#define INTERRUPT_COUNT 0x100
+
 /**
  * Defined for each interrupt in vector table
  * 
@@ -84,7 +85,6 @@ typedef struct
     uint32_t offset_high;
     uint32_t zero;
 } __attribute__((packed)) idt_gate;
-// packed has struct vars as close as possible
 
 typedef struct
 {

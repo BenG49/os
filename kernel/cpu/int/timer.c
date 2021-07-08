@@ -3,17 +3,18 @@
 uint32_t tick;
 uint32_t f;
 
-static void timer_callback(stack_regs *regs) { ++tick; }
-// static void timer_callback(stack_regs *regs)
-// {
-//     ++tick;
-//     putc('a');
-// }
+// static void timer_callback(registers *regs) { ++tick; }
+static void timer_callback(registers *regs)
+{
+    ++tick;
+    log_int(tick, 10);
+    putc('a');
+}
 
-// default is 18.222hz
+// freq 1 = 18.222hz
 void init_timer(uint32_t frequency)
 {
-    // set callback
+    // set isr callback
     set_handler(IRQ0, &timer_callback);
 
     // set frequency
@@ -40,7 +41,11 @@ void init_timer(uint32_t frequency)
 
     f = PIT_FREQ / frequency;
     tick = 0;
-    return;
+
+    puts("PIT initialized to ");
+    put_uint(f, 10);
+    puts("Hz");
+    newline();
 }
 
 uint32_t get_seconds()

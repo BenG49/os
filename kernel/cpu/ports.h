@@ -27,8 +27,8 @@ uint16_t inw(uint16_t port);
 void outw(uint16_t port, uint16_t data);
 
 // qemu logging
-void log_char(char c);
-void log(char *str);
+void logc(char c);
+void logs(char *str);
 // putint
 void log_int(int n, int base);
 

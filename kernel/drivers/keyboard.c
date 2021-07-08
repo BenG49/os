@@ -578,7 +578,7 @@ static keycode get_keycode(uint8_t scancode)
     return KEY_INVALID;
 }
 
-static void keyboard_callback(stack_regs *regs)
+static void keyboard_callback(registers *regs)
 {
     uint8_t scancode = inb((uint16_t)KB_PORT);
     keycode key = get_keycode(scancode);
@@ -639,4 +639,6 @@ void init_keyboard()
     set_handler(IRQ1, &keyboard_callback);
     // clear keyboard buffer
     memset(kb_buffer, 0, 0x100);
+
+    puts("PS2 keybord initialized");
 }

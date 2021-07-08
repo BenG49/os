@@ -25,22 +25,22 @@ char *messages[] = {
     "Unknown exception"
 };
 
-void isr_handler(stack_regs *regs)
+void isr_handler(registers *regs)
 {
-    puts("Interrupt!");
     // exception
     if (regs->isr_num < 32)
     {
-        log("Exception: ");
+        logs("Exception: ");
         log_int(regs->isr_num, 10);
-        log_char('\n');
+        logc('\n');
         int i = regs->isr_num;
+        // didn't include messages for exceptions > 19
         if (i > 19)
             i = 19;
         
-        // puts(messages[i]);
+        puts(messages[i]);
 
-        asm("hlt");
+        while (1) { asm("hlt"); }
     }
 
     // end interupt from PIC

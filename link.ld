@@ -1,5 +1,5 @@
 /* _start is entry point */
-ENTRY(_start)
+ENTRY(kmain)
 
 SECTIONS
 {

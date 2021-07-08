@@ -30,6 +30,7 @@ char *reverse(char *str, size_t len);
 
 
 // string conversions
+char *uitoa(unsigned int n, char *buf, int base);
 char *itoa(int n, char *buf, int base);
 
 #endif // STRING_H

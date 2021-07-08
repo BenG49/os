@@ -2,13 +2,11 @@
 #define KERNEL_H
 
 #include "drivers/vga.h"
+#include "drivers/keyboard.h"
 
-#include "cpu/int/gdt.h"
 #include "cpu/int/idt.h"
 #include "cpu/int/timer.h"
-#include "drivers/keyboard.h"
-#include "util.h"
 
-void _start();
+void kmain();
 
 #endif // KERNEL_H

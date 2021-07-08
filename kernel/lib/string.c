@@ -99,6 +99,44 @@ char *reverse(char *str, size_t len)
     return str;
 }
 
+char *uitoa(unsigned int n, char *buf, int base)
+{
+    if (base < 2 || base > 36)
+    {
+        *buf = 0;
+        return buf;
+    }
+
+    if (n == 0)
+    {
+        buf = (base == 16) ? "0x0\0" : "0\0";
+        return buf;
+    }
+
+    size_t i = 0;
+
+    while (n > 0)
+    {
+        // 0x57 = ('a' - 10)
+        if (base > 10 && n % base > 9)
+            buf[i++] = n % base + 0x57;
+        else
+            buf[i++] = n % base + '0';
+        
+        n /= base;
+    }
+
+    if (base == 16)
+    {
+        buf[i++] = 'x';
+        buf[i++] = '0';
+    }
+
+    buf[i] = 0;
+
+    return reverse(buf, i);
+}
+
 char *itoa(int n, char *buf, int base)
 {
     if (base < 2 || base > 36)
@@ -133,14 +171,14 @@ char *itoa(int n, char *buf, int base)
         n /= base;
     }
 
-    if (sign)
-        buf[i++] = '-';
-
     if (base == 16)
     {
         buf[i++] = 'x';
         buf[i++] = '0';
     }
+
+    if (sign)
+        buf[i++] = '-';
 
     buf[i] = 0;
 

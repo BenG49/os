@@ -36,11 +36,9 @@ void outw(uint16_t port, uint16_t data)
 
 void pic_eoi(int irq)
 {
-    // irq also came from PIC2 if > 7
-    // with offset 40
-    // TODO: check if this is right
-    // if (irq >= 40)
-    if (irq >= 8)
+    // irq also came from PIC2 if >= 8
+    // with vector offset of 32
+    if (irq >= 40)
     {
         outb(PIC2_CMD, PIC_EOI);
     }
@@ -48,29 +46,32 @@ void pic_eoi(int irq)
     outb(PIC1_CMD, PIC_EOI);
 }
 
-void log_char(char c)
+void logc(char c)
 {
     outb(COM1, c);
 }
 
-void log(char *str)
+void logs(char *str)
 {
     int i = 0;
     while (str[i])
-        log_char(str[i++]);
+        logc(str[i++]);
 }
 
 void log_int(int n, int base)
 {
+    if (base < 2 || base > 16)
+        return;
+
     if (base == 16)
     {
-        log_char('0');
-        log_char('x');
+        logc('0');
+        logc('x');
     }
 
     if (n == 0)
     {
-        log_char('0');
+        logc('0');
         return;
     }
 
@@ -83,6 +84,8 @@ void log_int(int n, int base)
         n /= base;
     }
 
+    --i;
+
     while (i >= 0)
-        log_char(tmpb[--i]);
+        logc(tmpb[i--]);
 }

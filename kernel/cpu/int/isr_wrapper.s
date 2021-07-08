@@ -117,5 +117,7 @@ irq_common_stub:
     push rbx
     push rax
 
-    add rsp, 16 ; "pops" null byte and isr num
+    ; "pops" error byte and isr number
+    add rsp, 8
+    ; iret pops the interrupt data from the stack
     iretq

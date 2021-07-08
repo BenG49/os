@@ -53,3 +53,32 @@ void puts(const char *str)
 {
     term_write(str, strlen(str));
 }
+
+void newline()
+{
+    term_write("\n", 1);
+}
+
+void put_uint(unsigned int n, int base)
+{
+    if (base < 2 || base > 36)
+        return;
+    
+    char buf[21];
+
+    uitoa(n, buf, base);
+
+    term_write(buf, strlen(buf));
+}
+
+void put_int(int n, int base)
+{
+    if (base < 2 || base > 36)
+        return;
+    
+    char buf[21];
+
+    itoa(n, buf, base);
+
+    term_write(buf, strlen(buf));
+}

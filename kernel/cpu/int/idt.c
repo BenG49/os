@@ -5,22 +5,25 @@ static idt_register idt_reg;
 
 void set_idt_gate(int n, uint64_t handler_addr)
 {
-    idt[n].offset_low = (uint16_t)(handler_addr & 0xffff);
-    idt[n].offset_mid = (uint16_t)((handler_addr >> 16) & 0xffff);
-    idt[n].offset_high = (uint32_t)((handler_addr >> 32) & 0xffffffff);
+    // idt[n].offset_low = (uint16_t)(handler_addr & 0xffff);
+    // idt[n].offset_mid = (uint16_t)((handler_addr >> 16) & 0xffff);
+    // idt[n].offset_high = (uint32_t)((handler_addr >> 32) & 0xffffffff);
+    idt[n].offset_low = (uint16_t)handler_addr;
+    idt[n].offset_mid = (uint16_t)(handler_addr >> 16);
+    idt[n].offset_high = (uint32_t)(handler_addr >> 32);
 
     // unused feature
     idt[n].ist = 0;
 
     idt[n].zero = 0;
-    // this is the offset of the code segment
-    idt[n].selector = 0x08;
+    // 0x28 = index 5 in GDT, or 64-bit code selector (stivale spec)
+    idt[n].selector = 0x28;
     // gate type = 32 bit int, privilige lvl 0
     idt[n].flags = 0b10001110;
 }
 
 // moves PIC interrupts to after CPU defined interrupts
-// IBM did an oops and made them interfere in protected mode
+// IBM did an oops and made exceptions and interrupts interfere in protected mode
 static void PIC_init()
 {
     uint8_t a1, a2;
@@ -37,7 +40,6 @@ static void PIC_init()
     outb(PIC1_DATA, 0x20);
     outb(PIC2_DATA, 0x28);
 
-    // do something
     outb(PIC1_DATA, 4);
     outb(PIC2_DATA, 2);
     outb(PIC1_DATA, 1);
@@ -51,8 +53,8 @@ static void PIC_init()
 void init_idt()
 {
     // clear table
-    // memset(&idt, 0, sizeof(idt_gate) * INTERRUPT_COUNT);
-    // PIC_init();
+    memset(&idt, 0, sizeof(idt_gate) * INTERRUPT_COUNT);
+    PIC_init();
 
     // init idt gates
     // exceptions
@@ -98,4 +100,8 @@ void init_idt()
     idt_reg.offset = (uint64_t)idt;
 
     asm("lidt %0" :: "m"(idt_reg) : "memory");
+
+    puts("IDT loaded at ");
+    put_uint(idt_reg.offset, 16);
+    newline();
 }
