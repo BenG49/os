@@ -1,8 +1,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include "../cpu/int/isr.h"
-#include "../kernel.h"
+#include "../int/idt.h"
 #include "../lib/mem.h"
 #include "vga.h"
 

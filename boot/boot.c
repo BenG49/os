@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "stivale2.h"
 
-static uint8_t stack[1024];
+static uint8_t stack[4096];
 
 /*
 terminal header tag:

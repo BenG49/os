@@ -9,7 +9,6 @@
 #define CURSOR_HIGH 0x0e
 #define CURSOR_LOW  0x0f
 
-// from osdev wiki
 // PIC ports
 #define PIC1        0x20
 #define PIC1_CMD    PIC1
@@ -33,6 +32,9 @@ void logs(char *str);
 void log_int(int n, int base);
 
 // send end of interrupt
-void pic_eoi(int irq);
+void pic_eoi(uint8_t irq);
+void pic_set_mask(uint8_t irq);
+void pic_clear_mask(uint8_t irq);
+void pic_clear_masks();
 
 #endif // PORTS_H

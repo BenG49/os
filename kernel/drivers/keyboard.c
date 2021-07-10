@@ -578,7 +578,7 @@ static keycode get_keycode(uint8_t scancode)
     return KEY_INVALID;
 }
 
-static void keyboard_callback(registers *regs)
+static void keyboard_callback(const stack *regs)
 {
     uint8_t scancode = inb((uint16_t)KB_PORT);
     keycode key = get_keycode(scancode);
@@ -587,18 +587,18 @@ static void keyboard_callback(registers *regs)
     if (key == -1) { return; }
 
     if (key == KEY_LEFT_SHIFT_PRESSED || key == KEY_RIGHT_SHIFT_PRESSED)
-        set_bit(&flags, SHIFT);
+        flags |= (1 << SHIFT);
     else if (key == KEY_LEFT_SHIFT_RELEASED || key == KEY_RIGHT_SHIFT_RELEASED)
-        clear_bit(&flags, SHIFT);
+        flags &= ~(1 << SHIFT);
     
     else if (key == KEY_CAPSLOCK_PRESSED)
-        set_bit(&flags, CAPS);
+        flags |= (1 << CAPS);
     else if (key == KEY_CAPSLOCK_RELEASED)
-        clear_bit(&flags, CAPS);
+        flags &= ~(1 << CAPS);
 
     if (key < SCANCODE_SPECIAL)
     {
-        if (bit_test(flags, SHIFT) || bit_test(flags, CAPS))
+        if ((flags >> SHIFT) == 1 || (flags >> CAPS) == 1)
         {
             key = shifted[key];
         }
@@ -636,7 +636,7 @@ static void keyboard_callback(registers *regs)
 
 void init_keyboard()
 {
-    set_handler(IRQ1, &keyboard_callback);
+    set_handler(1 + PIC_OFFSET, &keyboard_callback);
     // clear keyboard buffer
     memset(kb_buffer, 0, 0x100);
 

@@ -1,84 +1,194 @@
 #include "vga.h"
 
+static term_write term;
 /*
-pitch       = number of bytes in each row
-bpp         = bits per pixel
-mem_model   = 1=rgb, everything else undefined
-
-_ mask      = bit mask for rgb value, ex: redmask = 0xff0000
-_ shift     = bit shift for rgb value, ex: redshift = 16
+pitch = bytes per row
 */
-static struct stivale2_struct_tag_framebuffer *framebuffer_struct;
-static void (*term_write)(const char *string, size_t length);
+// static struct stivale2_struct_tag_framebuffer framebuffer;
 
-void init_vga(struct stivale2_struct *stivale2_struct)
+static int height, width, pitch, bpp;
+static uint32_t *framebuffer;
+
+void init_vga(term_write t, struct stivale2_struct_tag_framebuffer *buf)
 {
-    framebuffer_struct = get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
+    term = t;
 
-    struct stivale2_struct_tag_terminal *terminal_struct;
-    terminal_struct = get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_TERMINAL_ID);
+    height = buf->framebuffer_height;
+    width = buf->framebuffer_width;
+    pitch = buf->framebuffer_pitch;
+    bpp = buf->framebuffer_bpp;
+    framebuffer = (uint64_t *)buf->framebuffer_addr;
 
-    if (framebuffer_struct == NULL || terminal_struct == NULL)
-    {
-        // TODO: figure out how to handle this
-    }
-
-    term_write = (void *)terminal_struct->term_write;
-}
-
-// static void set_px(int x, int y, int r, int g, int b)
-// {
-//     void *ptr = (void *)framebuffer_struct->framebuffer_addr;
-
-// }
-
-void putc(char c)
-{
-    if (c == '\b')
-    {
-        char *buf = "\b \b";
-        term_write(buf, 3);
-        return;
-    }
-
-    char buf[2];
-
-    buf[0] = c;
-    buf[1] = '\0';
-
-    term_write(buf, 1);
+    term("VGA initialized\n", 17);
 }
 
 void puts(const char *str)
 {
-    term_write(str, strlen(str));
+    term(str, strlen(str));
 }
 
-void newline()
+void putc(char c)
 {
-    term_write("\n", 1);
-}
-
-void put_uint(unsigned int n, int base)
-{
-    if (base < 2 || base > 36)
-        return;
-    
-    char buf[21];
-
-    uitoa(n, buf, base);
-
-    term_write(buf, strlen(buf));
+    term(&c, 1);
 }
 
 void put_int(int n, int base)
 {
-    if (base < 2 || base > 36)
+    if (base < 2 || base > 16)
         return;
     
-    char buf[21];
+    if (n < 0)
+    {
+        putc('-');
+        n = -n;
+    }
 
-    itoa(n, buf, base);
+    if (base == 16)
+    {
+        putc('0');
+        putc('x');
+    }
 
-    term_write(buf, strlen(buf));
+    if (n == 0)
+    {
+        putc('0');
+        return;
+    }
+
+    char tmpb[21];
+    int i = 0;
+
+    while (n > 0)
+    {
+        tmpb[i++] = "0123456789abcdef"[n % base];
+        n /= base;
+    }
+
+    --i;
+
+    while (i >= 0)
+        putc(tmpb[i--]);
 }
+
+void put_uint(unsigned int n, int base)
+{
+    if (base < 2 || base > 16)
+        return;
+    
+    if (n < 0) n = -n;
+
+    if (base == 16)
+    {
+        putc('0');
+        putc('x');
+    }
+
+    if (n == 0)
+    {
+        putc('0');
+        return;
+    }
+
+    char tmpb[21];
+    int i = 0;
+
+    while (n > 0)
+    {
+        tmpb[i++] = "0123456789abcdef"[n % base];
+        n /= base;
+    }
+
+    --i;
+
+    while (i >= 0)
+        putc(tmpb[i--]);
+}
+
+/*void printf(const char *fmt, ...)
+{
+    int tmp;
+    va_list arg;
+    va_start(arg, fmt);
+
+    for (const char *c = fmt; *c != 0; ++c)
+    {
+        if (*c != '%')
+        {
+            putc(*c);
+            continue;
+        }
+
+        ++c; // move past '%'
+
+        switch (*c)
+        {
+            case 'c':
+                tmp = va_arg(arg, int);
+                if (tmp >= 0 && tmp < 0x100)
+                    putc((char)tmp);
+                break;
+            case 'd':
+                put_int(va_arg(arg, int), 10);
+                break;
+            // case 'e':
+            // case 'f': // TODO: add put_float
+            case 'o':
+                put_int(va_arg(arg, int), 8);
+                break;
+            case 's':
+                puts(va_arg(arg, const char *));
+                break;
+            case 'u':
+                put_uint(va_arg(arg, int), 10);
+                break;
+            case 'x':
+                put_int(va_arg(arg, int), 16);
+                break;
+            case '%':
+                putc('%');
+                break;
+        }
+
+        va_end(arg);
+    }
+}*/
+
+void newline()
+{
+    puts("\n");
+}
+
+/* GRAPHICS FUNCTIONS */
+
+/*static px make_px(color c)
+{
+    uint64_t out = 0;
+
+    out |= ((c.r << framebuffer.red_mask_shift) & framebuffer.red_mask_size);
+    out |= ((c.g << framebuffer.green_mask_shift) & framebuffer.green_mask_size);
+    out |= ((c.b << framebuffer.blue_mask_shift) & framebuffer.blue_mask_size);
+
+    int shift = 64 - framebuffer.framebuffer_bpp;
+
+    return (px) {
+        out << shift,
+        shift
+    };
+}
+
+void put_px(unsigned int x, unsigned int y, color c)
+{
+    if (x > framebuffer.framebuffer_width)
+        return;
+    if (y > framebuffer.framebuffer_height)
+        return;
+
+    px p = make_px(c);
+
+    uint64_t *addr = (uint64_t *)framebuffer.framebuffer_addr;
+    int bytespp = framebuffer.framebuffer_bpp / 8;
+
+    addr += framebuffer.framebuffer_pitch * y + bytespp * x;
+
+    *addr = p.data >> p.shift;
+}*/

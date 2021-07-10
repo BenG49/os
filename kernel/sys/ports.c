@@ -34,18 +34,6 @@ void outw(uint16_t port, uint16_t data)
            ,"a"(data));
 }
 
-void pic_eoi(int irq)
-{
-    // irq also came from PIC2 if >= 8
-    // with vector offset of 32
-    if (irq >= 40)
-    {
-        outb(PIC2_CMD, PIC_EOI);
-    }
-    
-    outb(PIC1_CMD, PIC_EOI);
-}
-
 void logc(char c)
 {
     outb(COM1, c);
@@ -88,4 +76,58 @@ void log_int(int n, int base)
 
     while (i >= 0)
         logc(tmpb[i--]);
+}
+
+void pic_eoi(uint8_t irq)
+{
+    // irq also came from PIC2 if >= 8
+    if (irq >= 8)
+    {
+        outb(PIC2_CMD, PIC_EOI);
+    }
+    
+    outb(PIC1_CMD, PIC_EOI);
+}
+
+void pic_set_mask(uint8_t irq)
+{
+    uint16_t port;
+    uint8_t value;
+
+    if (irq < 8)
+        port = PIC1_DATA;
+    else
+    {
+        port = PIC2_DATA;
+        irq -= 8;
+    }
+
+    value = inb(port) | (1 << irq);
+    outb(port, value);
+}
+
+void pic_clear_mask(uint8_t irq)
+{
+    uint16_t port;
+    uint8_t value;
+
+    if (irq < 8)
+        port = PIC1_DATA;
+    else
+    {
+        port = PIC2_DATA;
+        irq -= 8;
+    }
+
+    value = inb(port) & ~(1 << irq);
+    outb(port, value);
+}
+
+void pic_clear_masks()
+{
+    inb(PIC1_DATA);
+    outb(PIC1_DATA, 0x00);
+
+    inb(PIC2_DATA);
+    outb(PIC2_DATA, 0x00);
 }

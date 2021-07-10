@@ -43,12 +43,6 @@ int memcmp(const void *ptr1, const void *ptr2, size_t n)
         ++i;
 
     return cptr1[i] - cptr2[i];
-    // const char *cptr1 = ptr1;
-    // const char *cptr2 = ptr2;
-
-    // while (*cptr1++ == *cptr2++);
-
-    // return *--cptr1 - *--cptr2;
 }
 
 void *memset(void *ptr, int value, size_t n)

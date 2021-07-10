@@ -1,7 +1,8 @@
 #ifndef MEM_H
 #define MEM_H
 
-#include "../util.h"
+#include <stdint.h>
+#include <stddef.h>
 
 // copy n bytes from src to dst
 void *memcpy(void *dst, const void *src, size_t n);
