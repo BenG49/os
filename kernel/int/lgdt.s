@@ -1,20 +1,14 @@
 ; https://forum.osdev.org/viewtopic.php?f=1&t=30739&sid=52089b032c69cf50c7113523702d3747&start=15
 bits 64
-default rel
 
-[global gdt_asm]
+[global lgdt]
 
-gdt_asm:
+lgdt:
     ; pointer passed in rdi (x86_64 System V ABI)
     ; lgdt [rdi]
+    pop rax
+    lgdt [rax]
 
-    lea rax, [rel .clear] ; gets around the relocation linking error
-
-    ; push 8
-    ; push rax
-    ; retf    ; jumps to clear and sets cs to 0x08 because it's a far jump
-
-.clear:
     mov rax, 0x10
     mov ds, rax
     mov es, rax
@@ -22,4 +16,8 @@ gdt_asm:
     mov gs, rax
     mov ss, rax
 
-    ret
+    pop rax     ; get caller location
+
+    push 0x08
+    push rax
+    retfq       ; far returns and sets cs to 0x08

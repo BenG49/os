@@ -17,20 +17,26 @@ KERNEL = kernel.elf
 ISO    = kernel.iso
 
 LINKFLAGS :=				\
-	-fno-pic -fPIE			\
-	-Wl,-static,-pie,--no-dynamic-linker,-ztext	\
-	-static-pie				\
-	-nostdlib				\
-	-T link.ld				\
-	-z max-page-size=0x1000
+ 	-fno-pic -fPIE			\
+ 	-Wl,-static,-pie,--no-dynamic-linker,-ztext	\
+ 	-static-pie				\
+ 	-nostdlib				\
+ 	-T link.ld				\
+ 	-z max-page-size=0x1000
 CFLAGS :=					\
 	-I.						\
 	-ffreestanding			\
 	-fno-stack-protector	\
+	-fno-omit-frame-pointer	\
+	-fno-lto				\
 	-fno-pic -fPIE			\
+	-mno-sse				\
+	-mno-sse2				\
+	-mno-mmx				\
 	-mno-80387				\
 	-mno-red-zone			\
 	-Wall					\
+	-pipe					\
 	-O2
 
 QFLAGS :=						\

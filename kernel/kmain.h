@@ -8,7 +8,6 @@
 
 #include "drivers/vga.h"
 #include "int/idt.h"
-
-extern void func();
+#include "int/gdt.h"
 
 #endif // KMAIN_H

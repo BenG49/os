@@ -3,13 +3,27 @@
 #ifndef GDT_H
 #define GDT_H
 
-#include "../../util.h"
-#include "../../drivers/vga.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "../drivers/vga.h"
 
 #define ENTRIES 5
 
+// access byte
+#define READ_WRITE  0b00000010
+#define DIR         0b00000100
+#define EXECUTABLE  0b00001000
+#define NONSYS_DESC 0b00010000
+#define USER_PRIVL  0b01100000
+#define PRESENT     0b10000000
+
+// granularity
+#define PAGE_GRANULARITY 0b10000000
+#define CODE_GRANULARITY 0b00100000
+
 __attribute__((sysv_abi))
-extern void gdt_asm(uint64_t *gdtr);
+extern void lgdt(size_t gdtr);
 
 typedef struct
 {
