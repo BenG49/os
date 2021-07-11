@@ -1,4 +1,10 @@
 #include "vga.h"
+
+static int make_color(int text, int back)
+{
+    return ((back << 4) | text);
+}
+
 // returns offset in pixels
 static int get_cursor_offset()
 {
@@ -83,24 +89,29 @@ void clear()
     set_cursor_offset(0);
 }
 
-void putchar(char c)
+void putc(char c)
 {
     print_char(c, WOB, get_cursor_offset());
 }
 
-void puts_color(char *str, int color)
+void puts_color(const char *str, int text, int back)
 {
     int px_offset = get_cursor_offset();
     // no way anyone's going past 2^16, right?
     uint16_t i = 0;
 
     while (str[i] != 0)
-        px_offset = print_char(str[i++], color, px_offset);
+        px_offset = print_char(str[i++], make_color(text, back), px_offset);
 }
 
-void puts(char *str)
+void puts(const char *str)
 {
-    puts_color(str, WOB);
+    int px_offset = get_cursor_offset();
+    // no way anyone's going past 2^16, right?
+    uint16_t i = 0;
+
+    while (str[i] != 0)
+        px_offset = print_char(str[i++], WOB, px_offset);
 }
 
 // more efficient than itoa, thanks to pitust from osdev discord
@@ -108,13 +119,13 @@ void putint(int n, int base)
 {
     if (base == 16)
     {
-        putchar('0');
-        putchar('x');
+        putc('0');
+        putc('x');
     }
 
     if (n == 0)
     {
-        putchar('0');
+        putc('0');
         return;
     }
 
@@ -128,12 +139,7 @@ void putint(int n, int base)
     }
 
     while (i >= 0)
-        putchar(tmpb[--i]);
-}
-
-int make_color(int text, int back)
-{
-    return (int)((back << 4) | text);
+        putc(tmpb[--i]);
 }
 
 void newline()

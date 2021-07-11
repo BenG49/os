@@ -2,6 +2,7 @@
 #define PORTS_H
 
 #include <stdint.h>
+#include "../lib/string.h"
 
 #define VGA_INDEX   0x3d4
 #define VGA_DATA    0x3d5

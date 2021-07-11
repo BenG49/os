@@ -622,7 +622,7 @@ static void keyboard_callback(stack_regs *regs)
             if(write_ptr > 0)
             {
                 kb_buffer[--write_ptr] = '\0';
-                putchar(key);
+                putc(key);
             }
 
             // don't write to keyboard buffer if backspace
@@ -630,7 +630,7 @@ static void keyboard_callback(stack_regs *regs)
         }
 
         kb_buffer[write_ptr++] = key;
-        putchar(key);
+        putc(key);
     }
 }
 

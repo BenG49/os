@@ -2,10 +2,10 @@
 #define KEYBOARD_H
 
 #include "vga.h"
-#include "../cpu/int/isr.h"
+#include "../int/isr.h"
 #include "../kernel.h"
-#include "../util/mem.h"
-#include "../util/util.h"
+#include "../lib/mem.h"
+#include "../util.h"
 
 /**
  * thanks to https://github.com/RicardoLuis0/simple-ps2-keyboard-driver-osdev

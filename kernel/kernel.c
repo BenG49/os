@@ -1,6 +1,6 @@
 #include "kernel.h"
 
-int kernel_main()
+int kmain()
 {
     init_idt();
     init_keyboard();
@@ -28,22 +28,22 @@ void shell_cmd(char *cmd)
 
         newline();
         putint(hours, 10);
-        putchar(':');
+        putc(':');
 
         if (minutes < 10)
-            putchar('0');
+            putc('0');
         putint(minutes, 10);
-        putchar(':');
+        putc(':');
 
         if (seconds < 10)
-            putchar('0');
+            putc('0');
         putint(seconds, 10);
     }
     else
     {
         puts("\n\"");
         puts(cmd);
-        putchar('\"');
+        putc('\"');
         puts(" is not a valid command.");
     }
 
