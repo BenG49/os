@@ -92,7 +92,6 @@ void init_idt()
     // set pic vector offset
     PIC_init();
 
-
     set_entry(0,  (size_t)isr0);
     set_entry(1,  (size_t)isr1);
     set_entry(2,  (size_t)isr2);
@@ -145,8 +144,8 @@ void init_idt()
     set_entry(47, (size_t)isr47);
 
     idtr idt = {
-        .size = sizeof(entries) - 1,
-        .offset = (size_t)entries
+        sizeof(entries) - 1, // size
+        (size_t)entries      // offset
     };
 
     asm volatile("lidtq %0" :: "m"(idt) : "memory");

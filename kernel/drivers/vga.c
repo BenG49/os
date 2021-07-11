@@ -70,7 +70,7 @@ void put_int(int n, int base)
         putc(tmpb[i--]);
 }
 
-void put_uint(unsigned int n, int base)
+void put_uint(size_t n, int base)
 {
     if (base < 2 || base > 16)
         return;

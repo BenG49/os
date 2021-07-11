@@ -23,7 +23,7 @@ void init_vga(term_write t, struct stivale2_struct_tag_framebuffer *framebuffer)
 void puts(const char *str);
 void putc(char c);
 void put_int(int n, int base);
-void put_uint(unsigned int n, int base);
+void put_uint(size_t n, int base);
 // void printf(const char *fmt, ...);
 
 void newline();

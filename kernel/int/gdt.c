@@ -23,7 +23,7 @@ static gdt_entry make_entry(
 
 void init_gdt()
 {
-    entries[0] = (gdt_entry) {}; // null entry
+    entries[0] = make_entry(0, 0, 0, 0); // null entry
     // kernel code segment (0x8)
     entries[1] = make_entry(0, 0, READ_WRITE | EXECUTABLE | NONSYS_DESC, CODE_GRANULARITY);
     // kernel data segment (0x10)
@@ -39,10 +39,7 @@ void init_gdt()
         .offset = (size_t)entries
     };
 
-    put_uint((size_t)&gdt_reg, 16);
-    newline();
-
-    lgdt((size_t)&gdt_reg);
+    load_gdt(&gdt_reg);
 
     puts("GDT loaded at ");
     put_uint((size_t)&gdt_reg, 16);

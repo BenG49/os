@@ -17,10 +17,10 @@ void kmain(struct stivale2_struct *tags)
         for (;;) { __asm__ volatile("hlt"); }
 
     init_vga((void *)terminal->term_write, framebuffer);
-    init_gdt();
-    init_idt();
+    // init_gdt();
+    // init_idt();
 
-    set_handler(32, h);
+    // set_handler(32, h);
 
-    // asm volatile("int $0x20");
+    // asm volatile("int $32");
 }

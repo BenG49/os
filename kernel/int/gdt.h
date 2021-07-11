@@ -22,8 +22,11 @@
 #define PAGE_GRANULARITY 0b10000000
 #define CODE_GRANULARITY 0b00100000
 
-__attribute__((sysv_abi))
-extern void lgdt(size_t gdtr);
+// selector values
+#define KERNEL_CS 0x8
+#define KERNEL_DS 0x10
+#define USER_CS   0x1b
+#define USER_DS   0x23
 
 typedef struct
 {
@@ -42,5 +45,7 @@ typedef struct
 } __attribute__((packed)) gdtr;
 
 void init_gdt();
+
+extern void load_gdt(gdtr* gdtr);
 
 #endif // GDT_H
