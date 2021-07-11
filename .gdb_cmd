@@ -1,0 +1,9 @@
+target remote localhost:1234
+
+symbol-file kernel.elf
+
+set disassembly-flavor intel
+set architecture i386:x86-64
+
+layout asm
+layout regs

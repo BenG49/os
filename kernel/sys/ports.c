@@ -125,9 +125,6 @@ void pic_clear_mask(uint8_t irq)
 
 void pic_clear_masks()
 {
-    inb(PIC1_DATA);
-    outb(PIC1_DATA, 0x00);
-
-    inb(PIC2_DATA);
-    outb(PIC2_DATA, 0x00);
+    outb(PIC1_DATA, 0);
+    outb(PIC2_DATA, 0);
 }

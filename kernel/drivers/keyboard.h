@@ -1,9 +1,9 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include "vga.h"
 #include "../int/idt.h"
 #include "../lib/mem.h"
-#include "vga.h"
 
 /**
  * thanks to https://github.com/RicardoLuis0/simple-ps2-keyboard-driver-osdev

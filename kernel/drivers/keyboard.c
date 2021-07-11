@@ -636,9 +636,9 @@ static void keyboard_callback(const stack *regs)
 
 void init_keyboard()
 {
-    set_handler(1 + PIC_OFFSET, &keyboard_callback);
+    set_handler(PIC_OFFSET + 1, keyboard_callback);
     // clear keyboard buffer
     memset(kb_buffer, 0, 0x100);
 
-    puts("PS2 keybord initialized");
+    puts("PS2 keybord initialized\n");
 }

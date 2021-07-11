@@ -58,18 +58,19 @@ static void set_entry(uint8_t n, size_t handler_addr)
 
 // moves PIC interrupts to after CPU defined interrupts
 // IBM did an oops and made exceptions and interrupts interfere in protected mode
-static void PIC_init()
+static void pic_init()
 {
     // init
     outb(PIC1_CMD, 0x11);
     outb(PIC2_CMD, 0x11);
 
     // set new offsets
-    outb(PIC1_DATA, 0x20);
-    outb(PIC2_DATA, 0x28);
+    outb(PIC1_DATA, PIC_OFFSET);
+    outb(PIC2_DATA, PIC_OFFSET + 8);
 
     outb(PIC1_DATA, 4);
     outb(PIC2_DATA, 2);
+
     outb(PIC1_DATA, 1);
     outb(PIC2_DATA, 1);
 
@@ -82,7 +83,7 @@ void init_idt()
     memset(&entries, 0, sizeof(idt_entry) * INT_COUNT);
 
     // set pic vector offset
-    PIC_init();
+    pic_init();
 
     set_entry(0,  (size_t)isr0);
     set_entry(1,  (size_t)isr1);
@@ -157,7 +158,7 @@ void isr_handler(const stack *regs)
         newline();
 
         // exception
-        for (;;) { __asm__ volatile("hlt"); }
+        for (;;) { asm volatile("hlt"); }
     }
 
     // tell pic to end interrupt

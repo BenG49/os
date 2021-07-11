@@ -8,6 +8,8 @@
 
 #include "drivers/vga.h"
 #include "drivers/keyboard.h"
+#include "drivers/timer.h"
+
 #include "int/idt.h"
 #include "int/gdt.h"
 
