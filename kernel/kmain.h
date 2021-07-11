@@ -7,6 +7,7 @@
 #include "../boot/stivale_util.h"
 
 #include "drivers/vga.h"
+#include "drivers/keyboard.h"
 #include "int/idt.h"
 #include "int/gdt.h"
 

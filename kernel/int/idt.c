@@ -60,12 +60,6 @@ static void set_entry(uint8_t n, size_t handler_addr)
 // IBM did an oops and made exceptions and interrupts interfere in protected mode
 static void PIC_init()
 {
-    uint8_t a1, a2;
-
-    // save masks
-    a1 = inb(PIC1_DATA);
-    a2 = inb(PIC2_DATA);
-
     // init
     outb(PIC1_CMD, 0x11);
     outb(PIC2_CMD, 0x11);
@@ -79,9 +73,7 @@ static void PIC_init()
     outb(PIC1_DATA, 1);
     outb(PIC2_DATA, 1);
 
-    // restore masks
-    outb(PIC1_DATA, a1);
-    outb(PIC2_DATA, a2);
+    pic_clear_masks();
 }
 
 void init_idt()
@@ -161,22 +153,22 @@ void isr_handler(const stack *regs)
     {
         puts(messages[regs->isr_num]);
         puts(": ");
-        put_int(regs->err_code, 16);
+        put_uint(regs->err_code, 16);
         newline();
 
         // exception
-        for (;;) { asm volatile("hlt"); }
+        for (;;) { __asm__ volatile("hlt"); }
     }
 
     // tell pic to end interrupt
-    pic_eoi(regs->isr_num - 32);
+    pic_eoi(regs->isr_num - PIC_OFFSET);
 
     // call interrupt/exception
     if (handlers[regs->isr_num] != NULL)
         handlers[regs->isr_num](regs);
     else
     {
-        puts("No isr handler for isr ");
+        puts("No ISR handler for ISR ");
         put_uint(regs->isr_num - 32, 10);
         puts("!\n");
     }

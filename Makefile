@@ -21,7 +21,7 @@ LINKFLAGS :=				\
  	-Wl,-static,-pie,--no-dynamic-linker,-ztext	\
  	-static-pie				\
  	-nostdlib				\
- 	-T link.ld				\
+ 	-T linker.ld				\
  	-z max-page-size=0x1000
 CFLAGS :=					\
 	-I.						\

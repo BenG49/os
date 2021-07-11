@@ -1,4 +1,4 @@
-/* _start is entry point */
+OUTPUT_FORMAT(elf64-x86-64)
 ENTRY(kmain)
 
 SECTIONS
