@@ -2,7 +2,7 @@
 
 UNFINISHED
 
-Small x86 kernel and bootloader, currently ring 0 protected mode.
+x86-64 kernel
 
 Resources:
  - https://github.com/cfenollosa/os-tutorial

@@ -5,7 +5,7 @@
 #include "../lib/mem.h"
 #include "../sys/sys.h"
 #include "../sys/ports.h"
-#include "../drivers/vga.h"
+#include "../drivers/tty.h"
 
 #define INT_COUNT 0x100
 #define PIC_OFFSET 0x20

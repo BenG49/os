@@ -41,7 +41,5 @@ void init_gdt()
 
     load_gdt(&gdt_reg);
 
-    puts("GDT loaded at ");
-    put_uint((size_t)&gdt_reg, 16);
-    newline();
+    printf("GDT loaded at %x\n", (size_t)&gdt_reg);
 }

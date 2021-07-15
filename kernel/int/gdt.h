@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../drivers/vga.h"
+#include "../drivers/tty.h"
 
 #define ENTRIES 5
 

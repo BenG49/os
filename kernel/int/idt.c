@@ -143,19 +143,17 @@ void init_idt()
 
     asm volatile("lidtq %0" :: "m"(idt) : "memory");
 
-    puts("IDT loaded at ");
-    put_uint(idt.offset, 16);
-    newline();
+    printf("IDT loaded at %x\n", idt.offset);
+
+    // for some reason interrupt bit was cleared
+    asm volatile("sti");
 }
 
 void isr_handler(const stack *regs)
 {
     if (regs->isr_num < 32)
     {
-        puts(messages[regs->isr_num]);
-        puts(": ");
-        put_uint(regs->err_code, 16);
-        newline();
+        printf("%s: %x\n", messages[regs->isr_num], regs->err_code);
 
         // exception
         for (;;) { asm volatile("hlt"); }
@@ -168,11 +166,7 @@ void isr_handler(const stack *regs)
     if (handlers[regs->isr_num] != NULL)
         handlers[regs->isr_num](regs);
     else
-    {
-        puts("No ISR handler for ISR ");
-        put_uint(regs->isr_num - 32, 10);
-        puts("!\n");
-    }
+        printf("No ISR handler for ISR %u!\n", regs->isr_num);
 }
 
 void set_handler(uint8_t isr, handler h) { handlers[isr] = h; }

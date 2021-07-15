@@ -32,9 +32,7 @@ void init_timer(uint32_t freq)
 
     set_handler(PIC_OFFSET, timer_callback);
 
-    puts("PIT initialized to ");
-    put_uint(f, 10);
-    puts("Hz\n");
+    printf("PIT initialized to %uHz\n", f);
 }
 
 int get_ms()

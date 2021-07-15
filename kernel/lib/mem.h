@@ -14,6 +14,6 @@ void *memmove(void *dst, const void* src, size_t n);
 int memcmp(const void *ptr1, const void *ptr2, size_t n);
 
 // fill n bytes at ptr with value
-void *memset(void *ptr, int value, size_t n);
+void *memset(void *ptr, uint8_t value, size_t n);
 
 #endif // MEM_H

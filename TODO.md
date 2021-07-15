@@ -1,4 +1,4 @@
 # TODO
-    [ ] load gdt long mode
-    [ ] get long mode idt to work
-    [ ] write a memory manager
+    [x] Write a font and tty driver
+        [ ] Add double buffer
+    [x] Write a memory manager

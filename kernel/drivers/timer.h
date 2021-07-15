@@ -14,4 +14,4 @@
 void init_timer(uint32_t freq);
 int get_ms();
 
-#endif
+#endif // TIMER_H

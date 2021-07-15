@@ -45,7 +45,7 @@ int memcmp(const void *ptr1, const void *ptr2, size_t n)
     return cptr1[i] - cptr2[i];
 }
 
-void *memset(void *ptr, int value, size_t n)
+void *memset(void *ptr, uint8_t value, size_t n)
 {
     uint8_t *p = ptr;
 

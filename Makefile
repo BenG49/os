@@ -85,9 +85,6 @@ $(KERNEL): $(OBJ)
 %.o: %.s
 	nasm -f elf64 $< -o $@
 
-%.bin: %.s
-	nasm -f bin $< -o $@
-
 %.s: %.c
 	$(CC) $(CFLAGS) -S -fno-asynchronous-unwind-tables -fno-dwarf2-cfi-asm -masm=intel -c $< -o $@
 

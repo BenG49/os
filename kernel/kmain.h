@@ -4,13 +4,15 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include "../boot/stivale_util.h"
+#include "lib/stivale_util.h"
 
-#include "drivers/vga.h"
+#include "drivers/tty.h"
 #include "drivers/keyboard.h"
 #include "drivers/timer.h"
 
 #include "int/idt.h"
 #include "int/gdt.h"
+
+#include "pmm/pmm.h"
 
 #endif // KMAIN_H
