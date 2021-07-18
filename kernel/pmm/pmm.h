@@ -25,6 +25,7 @@ typedef struct {
 
 // sector size in bytes
 void init_pmm(struct stivale2_struct_tag_memmap *memmap, unsigned int sector_size);
+void print_pmm(struct stivale2_struct_tag_memmap *memmap);
 
 void *malloc(size_t size);
 void free(void *ptr);

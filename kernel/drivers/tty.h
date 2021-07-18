@@ -36,6 +36,8 @@ void put_int(int n, int base);
 void put_uint(size_t n, int base);
 void printf(const char *fmt, ...);
 
+void debug_ok(const char *str);
+
 void set_color(color c);
 
 #endif // TTY_H

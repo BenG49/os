@@ -79,16 +79,16 @@ void set_cursor(uint32_t x, uint32_t y)
 void disable_cursor() { cursor_on = false; cursor(BLACK); }
 void enable_cursor()  { cursor_on = true; draw_cursor(); }
 
-void putc(char c)
+static void plot_char(char ch, color c)
 {
     clear_cursor();
 
     // normal characters
-    if (c > 0x1f && c < 0x7f)
+    if (ch > 0x1f)
     {
         // start framebuffer offset
         color *buf = get_cursor_ptr();
-        uint8_t *char_ptr = font_bitmap[(int)c];
+        uint8_t *char_ptr = font_bitmap[(int)ch];
 
         for (int y = 0; y < FONT_Y; ++y)
         {
@@ -96,7 +96,7 @@ void putc(char c)
             {
                 // if bit set
                 if (((char_ptr[y] >> x) & 1) == 1)
-                    *buf = text_color;
+                    *buf = c;
 
                 ++buf;
             }
@@ -109,7 +109,7 @@ void putc(char c)
         if (cursor_x >= width)
             cursor_x = 0;
     }
-    else if (c == '\n')
+    else if (ch == '\n')
     {
         ++cursor_y;
         cursor_x = 0;
@@ -121,7 +121,7 @@ void putc(char c)
             --cursor_y;
         }
     }
-    else if (c == '\t')
+    else if (ch == '\t')
     {
         cursor_x += 4;
         cursor_x &= ~(0b11);
@@ -129,19 +129,24 @@ void putc(char c)
         if (cursor_x >= width)
             cursor_x = 0;
     }
-    else if (c == '\b')
+    else if (ch == '\b')
     {
-        // TODO: make it so it blacks out when x=0
-        cursor(BLACK);
         if (cursor_x > 0)
             --cursor_x;
+
+        cursor(BLACK);
     }
-    else if (c == '\r')
+    else if (ch == '\r')
     {
         cursor_x = 0;
     }
-    
+
     draw_cursor();
+}
+
+void putc(char c)
+{
+    plot_char(c, text_color);
 }
 
 void puts(const char *str)
@@ -267,11 +272,19 @@ void printf(const char *format, ...)
     va_end(arg);
 }
 
-// java flashbacks
-void set_color(color c)
+void debug_ok(const char *str)
 {
-    text_color = c;
+    puts("[ ");
+    plot_char('O', (color){.g = 255});
+    plot_char('K', (color){.g = 255});
+    puts(" ] ");
+
+    puts(str);
+    putc('\n');
 }
+
+// java flashbacks
+void set_color(color c) { text_color = c; }
 
 void scroll()
 {

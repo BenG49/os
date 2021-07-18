@@ -4,17 +4,40 @@ static mem_block start_block = { .start = NULL };
 static unsigned int sector_size_bits;
 static unsigned int sector_size_bytes;
 
-/*
+static char *type_names[] = {
+    "",
+    "USABLE:                 ",
+    "RESERVED:               ",
+    "ACPI RECLAIMABLE:       ",
+    "ACPI NVS:               ",
+    "BAD MEMORY:             ",
+    "BOOTLOADER RECLAIMABLE: ",
+    "KERNEL & MODULES:       ",
+    "FRAMEBUFFER:            "
+};
 
-|-------------------------------------------------------|
-|     start of segment    |      mem_block struct       |
-|-------------------------------------------------------|
-| end of mem_block struct |          bitmap             |
-|-------------------------------------------------------|
-|      end of bitmap      | start of allocatable memory |
-|-------------------------------------------------------|
+void print_pmm(struct stivale2_struct_tag_memmap *memmap)
+{
+    struct stivale2_mmap_entry *entries = (void *)memmap->memmap;
+    struct stivale2_mmap_entry *entry;
 
-*/
+    uint32_t type;
+
+    printf("\n ----- MEMMAP: %u entries ----- \n", memmap->entries);
+
+    for (int i = 0; i < memmap->entries; ++i)
+    {
+        entry = &entries[i];
+
+        type = entry->type;
+        if (type > 10)
+            type -= 4090; // offset from 0x1000
+
+        printf("%s%x  \t-> %x\n", type_names[type], entry->base, entry->base + entry->length);
+    }
+
+    putc('\n');
+}
 
 void init_pmm(struct stivale2_struct_tag_memmap *memmap, unsigned int sector_size)
 {
