@@ -474,20 +474,20 @@ static const keycode us_querty_keycodes_extra1[0xEE] = {
     KEY_INVALID,//0xED,MULTIMEDIA
 };
 
-const char shifted[] = "??????????\n????????????????????? !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
+static const char shifted[] = "??????????\n????????????????????? !\"#$%&\"()*+<_>?)!@#$%^&*(::<+>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}^_~ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~";
 
 // for some reason the pause scancode is 5 bytes long, go figure
-const uint8_t PAUSE_CODES[] = {
+static const uint8_t PAUSE_CODES[] = {
     0x1d, 0x45, 0xe1, 0x9d, 0xc5
 };
 
-uint8_t flags = 0;
-uint8_t pause_state = 0;
-uint8_t prtsc_pstate = 0;
-uint8_t prtsc_rstate = 0;
+static uint8_t flags = 0;
+static uint8_t pause_state = 0;
+static uint8_t prtsc_pstate = 0;
+static uint8_t prtsc_rstate = 0;
 
-char kb_buffer[256];
-int write_ptr = 0;
+static char kb_buffer[256];
+static int write_ptr = 0;
 
 // complicated annoying state machine
 // returns -1 if waiting for next scancode
@@ -605,8 +605,6 @@ static void keyboard_callback(const stack *regs)
         // if shift key pressed, add newline
         else if (key == '\n')
         {
-            // call command
-            // shell_cmd(kb_buffer);
             // clear buffer
             for (int i = 0; i < write_ptr; ++i)
                 kb_buffer[i] = 0;
@@ -640,5 +638,5 @@ void init_keyboard()
     // clear keyboard buffer
     memset(kb_buffer, 0, 0x100);
 
-    puts("PS2 keybord initialized\n");
+    debug_ok("PS2 keyboard initialized");
 }

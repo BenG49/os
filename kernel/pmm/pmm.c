@@ -55,8 +55,8 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap, unsigned int sector_siz
 
         // if map entry isn't usable
         if ((entry->type != STIVALE2_MMAP_USABLE) &&
-            (entry->type != STIVALE2_MMAP_ACPI_RECLAIMABLE) &&
-            (entry->type != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE))
+            // (entry->type != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE) &&
+            (entry->type != STIVALE2_MMAP_ACPI_RECLAIMABLE))
             continue;
         
         // b = bitmap size, k = sector size, l = (length - mem block)
@@ -70,9 +70,7 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap, unsigned int sector_siz
         void *bitmap_start = entry_start + sizeof(mem_block);
         void *mem_start    = bitmap_start + bitmap_size;
 
-        // BUG ADDRESS: 0x7fc6df40
-        // VIRTUAL ADDR OF PAGE: 0xfd0c5230
-        // error: write access
+        // note: bug from beofre was overwriting bootloader reclaimable page tables, pagefault
         // clears bitmap (all of memory is free)
         memset(bitmap_start, 0, bitmap_size);
 
@@ -103,9 +101,6 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap, unsigned int sector_siz
 
             cur->next = b;
             cur = b;
-
-            // FIXME: add page allocation so i dont just use the first two blocks
-            break;
         }
     }
 

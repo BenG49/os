@@ -3,23 +3,10 @@
 
 static uint8_t stack[4096];
 
-/*
-terminal header tag:
-    makes it so that limine will set up a terminal
-*/
-static struct stivale2_header_tag_terminal terminal_hdr_tag = {
-    .tag = {
-        .identifier = STIVALE2_HEADER_TAG_TERMINAL_ID,
-        .next = 0   // end of linked list, null ptr
-    },
-    // terminal has no flags
-    .flags = 0
-};
-
 static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
     .tag = {
         .identifier = STIVALE2_HEADER_TAG_FRAMEBUFFER_ID,
-        .next = (uint64_t)&terminal_hdr_tag     // linked list, links to next tag
+        .next = 0   // end of linked list, null ptr
     },
     // if all values set to 0, bootloader picks values
     .framebuffer_width  = 0,

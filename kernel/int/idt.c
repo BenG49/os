@@ -3,6 +3,8 @@
 static idt_entry entries[INT_COUNT];
 static handler handlers[INT_COUNT];
 
+void set_handler(uint8_t isr, handler h) { handlers[isr] = h; }
+
 char *messages[32] = {
     "#DE Division by zero exception",
     "#DB Debug exception",
@@ -44,8 +46,8 @@ static void set_entry(uint8_t n, size_t handler_addr)
     entries[n].offset_mid = (uint16_t)(handler_addr >> 16);
     entries[n].offset_hi  = (uint32_t)(handler_addr >> 32);
 
-    // 0x28 = index 5 in GDT, or 64-bit code selector (stivale spec)
-    entries[n].selector = 0x28;
+    // after loading gdt
+    entries[n].selector = 0x08;
 
     // unused
     entries[n].ist = 0;
@@ -75,6 +77,14 @@ static void pic_init()
     outb(PIC2_DATA, 1);
 
     pic_clear_masks();
+}
+
+static void pagefault(const stack *regs)
+{
+    size_t cr2;
+    asm volatile("mov %%cr2, %0"
+                    :"=r"(cr2));
+    printf("CR2: %x\n", cr2);
 }
 
 void init_idt()
@@ -143,10 +153,12 @@ void init_idt()
 
     asm volatile("lidtq %0" :: "m"(idt) : "memory");
 
-    printf("IDT loaded at %x\n", idt.offset);
+    debug_ok("IDT loaded");
 
     // for some reason interrupt bit was cleared
     asm volatile("sti");
+
+    set_handler(14, pagefault);
 }
 
 void isr_handler(const stack *regs)
@@ -154,6 +166,9 @@ void isr_handler(const stack *regs)
     if (regs->isr_num < 32)
     {
         printf("%s: %x\n", messages[regs->isr_num], regs->err_code);
+
+        if (handlers[regs->isr_num] != NULL)
+            handlers[regs->isr_num](regs);
 
         // exception
         for (;;) { asm volatile("hlt"); }
@@ -168,5 +183,3 @@ void isr_handler(const stack *regs)
     else
         printf("No ISR handler for ISR %u!\n", regs->isr_num);
 }
-
-void set_handler(uint8_t isr, handler h) { handlers[isr] = h; }

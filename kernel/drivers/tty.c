@@ -15,28 +15,6 @@ static color text_color = { 255, 255, 255, 255 };
 
 static bool cursor_on = true;
 
-void init_tty(struct stivale2_struct_tag_framebuffer *buf)
-{
-    framebuffer = (void *)buf->framebuffer_addr;
-
-    height = buf->framebuffer_height;
-    width = buf->framebuffer_width;
-    pitch = buf->framebuffer_pitch;
-    font_height = height / FONT_Y;
-
-    // clear screen
-    memset(framebuffer, 0, pitch * width);
-    
-    set_color((color) { .r = 255 });
-    putc('T');
-    set_color((color) { .g = 255 });
-    putc('T');
-    set_color((color) { .b = 255 });
-    putc('Y');
-    set_color(WHITE);
-    puts(" initialized\n");
-}
-
 static void *get_cursor_ptr()
 {
     return framebuffer + (cursor_y * width * FONT_Y) + (cursor_x * FONT_X);
@@ -142,6 +120,29 @@ static void plot_char(char ch, color c)
     }
 
     draw_cursor();
+}
+
+void init_tty(struct stivale2_struct_tag_framebuffer *buf)
+{
+    framebuffer = (void *)buf->framebuffer_addr;
+
+    height = buf->framebuffer_height;
+    width = buf->framebuffer_width;
+    pitch = buf->framebuffer_pitch;
+    font_height = height / FONT_Y;
+
+    // clear screen
+    memset(framebuffer, 0, pitch * width);
+
+    puts("[ ");
+    plot_char('O', (color){.g = 255});
+    plot_char('K', (color){.g = 255});
+    puts(" ] ");
+
+    plot_char('T', (color){ .r = 255 });
+    plot_char('T', (color){ .g = 255 });
+    plot_char('Y', (color){ .b = 255 });
+    puts(" initialized\n");
 }
 
 void putc(char c)

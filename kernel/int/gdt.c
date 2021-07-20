@@ -2,11 +2,7 @@
 
 static gdt_entry entries[ENTRIES];
 
-static gdt_entry make_entry(
-    uint32_t base,
-    uint32_t limit,
-    uint8_t access,
-    uint8_t granularity)
+static gdt_entry make_entry(uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity)
 {
     access |= PRESENT;
     granularity |= ((limit >> 16) & 0xf);
@@ -41,5 +37,5 @@ void init_gdt()
 
     load_gdt(&gdt_reg);
 
-    printf("GDT loaded at %x\n", (size_t)&gdt_reg);
+    debug_ok("GDT initialized");
 }
