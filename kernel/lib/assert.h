@@ -5,9 +5,9 @@
 
 static void __assert(const char *msg, const char *file, int line)
 {
-    printf("Assertion failed: %s at %s, line %d\n", msg, file, line);
+	printf("Assertion failed: %s at %s, line %d\n", msg, file, line);
 
-    for (;;) asm volatile("hlt");
+	for (;;) asm volatile("hlt");
 }
 
 // glibc

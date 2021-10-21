@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#include "../int/idt.h"
-#include "../sys/ports.h"
+#include <int/idt.h>
+#include <cpu/ports.h>
 
 #define PIT_FREQ 1193182
 #define MIN_FREQ 18

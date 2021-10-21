@@ -3,17 +3,17 @@ bits 64
 global load_gdt
 
 load_gdt:
-    ; pointer passed in rdi (x86_64 System V ABI)
-    lgdt [rdi]
+	; pointer passed in rdi (x86_64 System V ABI)
+	lgdt [rdi]
 
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
+	mov ax, 0x10
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
 
-    pop rax     ; get caller location
-    push 0x08
-    push rax
-    retfq       ; far returns and sets cs to 0x08
+	pop rax	; get caller location
+	push 0x08
+	push rax
+	retfq	; far returns and sets cs to 0x08

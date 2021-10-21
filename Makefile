@@ -2,11 +2,11 @@
 # $< = first dependency
 # $^ = all dependencies
 SERIAL  := log/serial.log
-QLOG    := log/qemu.log
+QLOG	:= log/qemu.log
 GDB_CMD := .gdb_cmd
 
 C_SOURCES 	:= $(shell find ./kernel/ ./boot/ -type f -name '*.c')
-#HEADERS=$(shell find . -type f -name '*.h')
+# HEADERS		:= $(shell find ./kernel/ ./boot/ -type f -name '*.h')
 ASM 		:= $(shell find ./kernel/ ./boot/ -type f -name '*.s')
 OBJ 		:= ${ASM:.s=.o} ${C_SOURCES:.c=.o}
 
@@ -15,7 +15,7 @@ GDB=/usr/bin/gdb
 LD=/usr/bin/ld
 
 KERNEL = kernel.elf
-ISO    = kernel.iso
+ISO	= kernel.iso
 
 LINKFLAGS :=				\
  	-fno-pic -fPIE			\
@@ -26,6 +26,7 @@ LINKFLAGS :=				\
  	-z max-page-size=0x1000
 CFLAGS :=					\
 	-I.						\
+	-I./kernel/				\
 	-ffreestanding			\
 	-fno-stack-protector	\
 	-fno-omit-frame-pointer	\
@@ -100,4 +101,4 @@ limine:
 	make -C limine
 
 clean:
-	rm *.bin *.elf $(OBJ) $(ISO)
+	(RM) *.bin *.elf $(OBJ) $(ISO)
