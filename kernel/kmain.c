@@ -26,5 +26,7 @@ void kmain(struct stivale2_struct *tags)
 	init_timer(1);
 	init_keyboard();
 
+	printf("allocated page %x\n", page_alloc());
+
 	for (;;) asm volatile("hlt");
 }

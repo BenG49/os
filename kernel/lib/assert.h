@@ -1,7 +1,7 @@
 #ifndef ASSERT_H
 #define ASSERT_H
 
-#include "../drivers/tty.h"
+#include <drivers/tty.h>
 
 static void __assert(const char *msg, const char *file, int line)
 {

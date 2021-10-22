@@ -1,6 +1,8 @@
 #include "pmm.h"
 
 #include <boot/stivale2.h>
+#include <lib/assert.h>
+#include <lib/util.h>
 
 static mem_block *start_block = NULL;
 
@@ -49,10 +51,39 @@ void print_pmm(struct stivale2_struct_tag_memmap *memmap)
 			type -= 4090; // offset from 0x1000
 
 		printf("%s%x  \t-> %x\n", type_names[type], entry->base, entry->base + entry->length);
-		// printf("%s%x  \t(%x)\n", type_names[type], entry->base, entry->length);
 	}
 
 	putc('\n');
+}
+
+static void print_alloc()
+{
+	mem_block *cur = start_block;
+
+	puts("---- PAGE ALLOCATIONS ----");
+
+	while (true)
+	{
+		printf("%x: ", cur->addr);
+
+		for (int i = 0; i < cur->bitmap_len; ++i)
+		{
+			if (cur->bitmap[i] == 0xff)
+				continue;
+
+			// loop over bits
+			for (int j = 0; j < 8; ++j)
+				if (BIT_TEST(cur->bitmap[i], j))
+					printf("%x ", cur->addr + (((i << 3) + j) << OFFSET_BITS));
+		}
+
+		putc('\n');
+
+		if (!cur->next)
+			break;
+
+		cur = cur->next;
+	}
 }
 
 static bool usable_entry(uint32_t type)
@@ -65,6 +96,7 @@ static bool usable_entry(uint32_t type)
 
 // FIXME:	assumes that usable entries are page aligned
 //			assumes that total < PAGE_SIZE
+// TODO: consolidate blocks that are adjacent and usable (does not happen now bc only one usable type)
 static void *init_mem_hdr(struct stivale2_struct_tag_memmap *memmap)
 {
 	struct stivale2_mmap_entry *entries = (void *)memmap->memmap;
@@ -77,7 +109,7 @@ static void *init_mem_hdr(struct stivale2_struct_tag_memmap *memmap)
 			continue;
 
 		// entries[i].length / PAGE_SIZE / 8;
-		total += sizeof(mem_block) + (entries[i].length >> 15);
+		total += sizeof(mem_block) + ((entries[i].length >> OFFSET_BITS) >> 3);
 	}
 
 	// place hdr
@@ -89,7 +121,7 @@ static void *init_mem_hdr(struct stivale2_struct_tag_memmap *memmap)
 		// found block that header can be placed in
 		if (entries[i].length >= total)
 		{
-			void *out = entries[i].base;
+			void *out = (void *)entries[i].base;
 
 			// header uses whole memory block, mark block as used
 			if (entries[i].length <= PAGE_SIZE)
@@ -104,6 +136,9 @@ static void *init_mem_hdr(struct stivale2_struct_tag_memmap *memmap)
 			return out;
 		}
 	}
+
+	puts("ERROR: Failed to alloc page frame allocator header");
+	assert(1);
 }
 
 void init_pmm(struct stivale2_struct_tag_memmap *memmap)
@@ -121,7 +156,7 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap)
 			continue;
 		
 		// entries[i].length / PAGE_SIZE
-		size_t pages = entries[i].length >> 12;
+		size_t pages = entries[i].length >> OFFSET_BITS;
 		// pages / 8
 		size_t bitmap_sz = sizeof(mem_block) + (pages >> 3);
 
@@ -139,7 +174,7 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap)
 		uint8_t *bitmap = hdr_ptr;
 		hdr_ptr += bitmap_sz;
 
-		new->addr	= entries[i].base;
+		new->addr	= (void *)entries[i].base;
 		new->pages	= pages;
 		new->bitmap = bitmap;
 		new->bitmap_len = bitmap_sz;
@@ -154,7 +189,7 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap)
 		}
 	}
 
-	cur = start_block;
+	/*cur = start_block;
 	while (true)
 	{
 		puts("---- BITMAP LIST ENTRY ----");
@@ -167,7 +202,51 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap)
 			cur = cur->next;
 		else
 			break;
-	}
+	}*/
+
+	print_alloc();
 }
 
-void *page_alloc() { }
+void *page_alloc()
+{
+	mem_block *cur = start_block;
+
+	while (true)
+	{
+		if (!cur->full)
+		{
+			for (int i = 0; i < cur->bitmap_len; ++i)
+			{
+				// skip over filled entries
+				if (cur->bitmap[i] == 0xff)
+					continue;
+
+				// loop over bits
+				for (int j = 0; j < 8; ++j)
+					// found empty page
+					if (!BIT_TEST(cur->bitmap[i], j))
+					{
+						// i is units of 8, (i * 8) + j is in pages
+						int addr_offset = ((i << 3) + j) << OFFSET_BITS;
+
+						BIT_SET(cur->bitmap[i], j);
+
+						print_alloc();
+
+						return cur->addr + addr_offset;
+					}
+			}
+
+			// very end of bitmap, all full
+			cur->full = true;
+		}
+
+		if (!cur->next)
+		{
+			puts("ERROR: Failed to alloc page: OUT OF MEMORY");
+			assert(1);
+		}
+
+		cur = cur->next;
+	}
+}

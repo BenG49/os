@@ -10,6 +10,7 @@
 #include <boot/stivale2.h>
 
 #define PAGE_SIZE 0x1000
+#define OFFSET_BITS 12
 
 // memory area header
 typedef struct mem_block {
