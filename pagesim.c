@@ -15,7 +15,7 @@
 #define PT_SIZE 0x200
 #define PAGE_SIZE 0x1000
 
-#define ADDR_MASK ((uint64_t)0x000FFFFFFFFFF000)
+#define ADDR_MASK ((uint64_t)0xFFFFFFFFFFFFF000)
 #define OFFSET_MASK ((uint64_t)0xFFF)
 
 #define PT_IDX(addr, lvl) (((addr) >> (lvl * (PT_BITS) + (OFFSET_BITS))) & (OFFSET_MASK))
@@ -30,9 +30,7 @@ uint64_t *next_lvl(uint64_t *table, size_t idx)
 {
 	// page is present
 	if (table[idx] & PRESENT)
-	{
 		return (uint64_t *)(table[idx] & ADDR_MASK);
-	}
 	else
 	{
 		uint64_t *new_table = aligned_alloc(PAGE_SIZE, PAGE_SIZE);

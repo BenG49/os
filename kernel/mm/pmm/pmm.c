@@ -1,8 +1,12 @@
 #include "pmm.h"
 
-#include <boot/stivale2.h>
+#include <drivers/tty.h>
 #include <lib/assert.h>
 #include <lib/util.h>
+#include <lib/mem.h>
+
+#define PAGE_SIZE 0x1000
+#define OFFSET_BITS 12
 
 static mem_block *start_block = NULL;
 
@@ -137,7 +141,7 @@ static void *init_mem_hdr(struct stivale2_struct_tag_memmap *memmap)
 		}
 	}
 
-	puts("ERROR: Failed to alloc page frame allocator header");
+	debug_err("Failed to alloca page frame allocator header");
 	assert(1);
 }
 
@@ -203,8 +207,6 @@ void init_pmm(struct stivale2_struct_tag_memmap *memmap)
 		else
 			break;
 	}*/
-
-	print_alloc();
 }
 
 void *page_alloc()
@@ -231,8 +233,6 @@ void *page_alloc()
 
 						BIT_SET(cur->bitmap[i], j);
 
-						print_alloc();
-
 						return cur->addr + addr_offset;
 					}
 			}
@@ -243,7 +243,7 @@ void *page_alloc()
 
 		if (!cur->next)
 		{
-			puts("ERROR: Failed to alloc page: OUT OF MEMORY");
+			debug_err("Failed to alloc page, out of memory");
 			assert(1);
 		}
 

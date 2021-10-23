@@ -14,5 +14,6 @@
 #include <int/gdt.h>
 
 #include <mm/pmm/pmm.h>
+#include <mm/vmm/vmm.h>
 
 #endif // KMAIN_H

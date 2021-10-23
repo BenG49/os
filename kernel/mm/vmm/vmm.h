@@ -1,13 +1,17 @@
 #ifndef VMM_H
 #define VMM_H
 
+// TODO: support 5 level paging
+
 #include <stdint.h>
 #include <stddef.h>
 
-#define PAGE_SIZE 0x1000
+typedef uint64_t page_entry_t;
 
-typedef struct page_table {
-	
-} __attribute__((aligned(PAGE_SIZE))) page_table;
+// get next level address and if nonexistent, malloc it
+void *next_lvl(page_entry_t *table, int index);
+void map_page(uint64_t virt, uint64_t phys, uint64_t flags);
+
+void init_vmm();
 
 #endif // VMM_H

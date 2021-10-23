@@ -290,6 +290,19 @@ void debug_ok(const char *str)
 	puts(str);
 }
 
+void debug_err(const char *str)
+{
+	printf("[ ");
+	plot_char('E', (color){.r = 255});
+	plot_char('R', (color){.r = 255});
+	plot_char('R', (color){.r = 255});
+	plot_char('O', (color){.r = 255});
+	plot_char('R', (color){.r = 255});
+	printf(" ] ");
+
+	puts(str);
+}
+
 // java flashbacks
 void set_color(color c) { text_color = c; }
 

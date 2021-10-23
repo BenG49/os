@@ -40,6 +40,7 @@ void printf(const char *fmt, ...);
 
 // kernel ok debug print
 void debug_ok(const char *str);
+void debug_err(const char *str);
 
 void set_color(color c);
 

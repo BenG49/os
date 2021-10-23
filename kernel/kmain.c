@@ -12,11 +12,12 @@ void kmain(struct stivale2_struct *tags)
 
 	init_tty(buf);
 	init_pmm(memmap);
+	
 	debug_ok("PMM initialized");
 
 	printf("epoch: %u\n", epoch->epoch);
 
-	print_pmm(memmap);
+	// print_pmm(memmap);
 
 	// desc tables
 	init_gdt();
@@ -26,7 +27,12 @@ void kmain(struct stivale2_struct *tags)
 	init_timer(1);
 	init_keyboard();
 
-	printf("allocated page %x\n", page_alloc());
+	init_vmm();
+
+	int i = 0;
+	++i;
+
+	printf("%d\n", i);
 
 	for (;;) asm volatile("hlt");
 }
